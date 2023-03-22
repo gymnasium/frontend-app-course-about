@@ -47,10 +47,10 @@ const About = () => {
   console.log('here' + params.courseId)
 
   const Course =
-    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+2023";
+    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+test2023";
 
   const Enrolment =
-    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+2023";
+    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+test2023";
 
   const update_data = async function () {
     const [firstResponse, secondResponse] = await Promise.all([
