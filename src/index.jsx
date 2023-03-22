@@ -11,7 +11,7 @@ import Header, { messages as headerMessages } from '@edx/frontend-component-head
 import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
 
 import appMessages from './i18n';
-import ExamplePage from './example/ExamplePage';
+import ExamplePage from './example/Course_about';
 
 import './index.scss';
 
