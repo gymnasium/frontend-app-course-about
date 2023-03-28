@@ -44,20 +44,17 @@ const About = () => {
   const [courseDetails, setCourseDetails] = useState(null);
   const [active, setActive] = useState(1);
 
-  console.log('here' + params.courseId)
-
   const Course =
-    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+test2023";
+    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+2023";
 
   const Enrolment =
-    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+test2023";
+    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+2023";
 
   const update_data = async function () {
     const [firstResponse, secondResponse] = await Promise.all([
       axios.get(Course),
       axios.get(Enrolment),
     ]);
-    console.log('here')
     console.log(firstResponse.data)
     setData(firstResponse.data);
 
@@ -124,7 +121,7 @@ const About = () => {
               alt={data?.course_name}
             />
           </div>
-          <div className="tabs-container">
+          <div className="course-info-banner">
             <div className="tabs">
               {tabItems.map(({ id, title }) => (
                 <TabItemComponent
@@ -135,8 +132,8 @@ const About = () => {
                 />
               ))}
             </div>
-            <div>
-              <Button className="enroll-button">
+            <div className="tabs">
+              <Button className="tab-item enroll-button">
                 {" "}
                 Enroll now <br /> Starts {date(data?.start)}
               </Button>
