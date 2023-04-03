@@ -1,7 +1,7 @@
 name: Build and deploy tutor
 on:
   push:
-    branches: [ "community-theme-master" ]
+    branches: [ "community-theme" ]
   
 
 jobs:
