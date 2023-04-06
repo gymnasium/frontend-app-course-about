@@ -10,7 +10,7 @@ const tabItems = [
   },
   {
     id: 2,
-    title: "info",
+    title: "Course info",
     content: "step 2 content",
   },
   {
