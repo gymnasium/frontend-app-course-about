@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
-import { Button, Container, Col } from "@edx/paragon";
+import { Button, Container, Col, Carousel } from "@edx/paragon";
+
 import Row from "react-bootstrap/Row";
 import axios from "axios";
 import TabItemComponent from "./TabItem";
@@ -34,7 +35,7 @@ const tabItems = [
   {
     id: 5,
     title: "FAQs",
-    section_class: "faq",
+    section_class: "faqs",
   },
 ];
 
@@ -73,21 +74,6 @@ const About = () => {
     return unformatData.toLocaleDateString("en-US", options);
   };
 
-  // const questions = document.querySelectorAll('.response h5');
-
-  // questions.forEach(question => {
-  //   const button = document.createElement('button');
-  //   button.innerText = '+';
-  //   button.classList.add('toggle-button');
-  //   question.appendChild(button);
-
-  //   button.addEventListener('click', () => {
-  //     const answer = question.nextElementSibling;
-  //     answer.classList.toggle('show');
-  //     button.innerText = answer.classList.contains('show') ? 'x' : 'Show Answer';
-  //   });
-  // });
-
   const toggleButtons = document.querySelectorAll('.toggle-button');
 
   toggleButtons.forEach(button => {
@@ -97,6 +83,54 @@ const About = () => {
       button.textContent = answer.classList.contains('show-answer') ? '-' : '+';
     });
   });
+
+  //customers section
+
+  const carousel = document.querySelector(".carousel");
+  const leftArrow = document.querySelector(".left-arrow");
+  const rightArrow = document.querySelector(".right-arrow");
+  const cards = document.querySelectorAll(".card");
+  
+  if(cards & leftArrow & rightArrow & carousel){
+    let cardWidth = cards[0].offsetWidth;
+    let cardMarginRight = parseInt(window.getComputedStyle(cards[0]).marginRight);
+    let cardCount = cards.length;
+    let carouselWidth = (cardWidth + cardMarginRight) * cardCount - cardMarginRight;
+    
+    carousel.style.width = `${carouselWidth}px`;
+    
+    rightArrow.addEventListener("click", () => {
+      let currentScrollPosition = carousel.scrollLeft;
+      let newScrollPosition = currentScrollPosition + cardWidth + cardMarginRight;
+      if (newScrollPosition < carouselWidth) {
+        carousel.scroll({
+          left: newScrollPosition,
+          behavior: "smooth"
+        });
+      } else {
+        carousel.scroll({
+          left: carouselWidth,
+          behavior: "smooth"
+        });
+      }
+    });
+    
+    leftArrow.addEventListener("click", () => {
+      let currentScrollPosition = carousel.scrollLeft;
+      let newScrollPosition = currentScrollPosition - cardWidth - cardMarginRight;
+      if (newScrollPosition > 0) {
+        carousel.scroll({
+          left: newScrollPosition,
+          behavior: "smooth"
+        });
+      } else {
+        carousel.scroll({
+          left: 0,
+          behavior: "smooth"
+        });
+      }
+    });
+  }
 
   return (
     <main>
@@ -201,6 +235,49 @@ const About = () => {
                 ""
               );
             })}
+            </div>
+            <img class="course-image" src="http://local.overhang.io:8000/asset-v1:test+test01+2023+type@asset+block@photo-1515378960530-7c0da6231fb1.jpeg"></img>
+            <div className="content wrapper-continer">
+            <h2>Happy Students</h2>
+            <div className="about-course-tabs">
+              <Carousel>
+                <Carousel.Item>
+                  <img
+                    className="d-block w-25"
+                    src="https://pic.onlinewebfonts.com/svg/img_237553.png"
+                    alt="First slide"
+                  />
+                  <Carousel.Caption>
+                    <h3>Michael Jones</h3>
+                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate.</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className="d-block w-25"
+                    src="https://pic.onlinewebfonts.com/svg/img_237553.png"
+                    alt="Third slide"
+                  />
+
+                  <Carousel.Caption>
+                    <h3>Second slide label</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className="d-block w-25"
+                    src="https://pic.onlinewebfonts.com/svg/img_237553.png"
+                    alt="Third slide"
+                  />
+
+                  <Carousel.Caption>
+                    <h3>Third slide label</h3>
+                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              </Carousel>
+            </div>
           </div>
         </div>
       </div>

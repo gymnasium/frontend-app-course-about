@@ -1,11 +1,22 @@
 .faq {
-  margin: 50px;
+  display: flex;
+  flex-direction: row;
+}
+
+.faq h2 {
+  margin-right: 50px;
+}
+
+.responses {
+  display: flex;
+  flex-direction: column;
 }
 
 .responses {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  width: 100%;
 }
 
 .response {
