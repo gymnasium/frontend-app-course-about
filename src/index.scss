@@ -2,6 +2,7 @@
 @import "@edx/brand/paragon/variables.scss";
 @import "@edx/paragon/scss/core/core.scss";
 @import "@edx/brand/paragon/overrides.scss";
+@import "./override_variables.scss";
 
 @import './example/index.scss';
 @import './global.scss';
