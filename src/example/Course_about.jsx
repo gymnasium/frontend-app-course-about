@@ -46,10 +46,10 @@ const About = () => {
   const [active, setActive] = useState(1);
 
   const Course =
-    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+test2023";
+    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+2023";
 
   const Enrolment =
-    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+test2023";
+    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+2023";
 
   const update_data = async function () {
     const [firstResponse, secondResponse] = await Promise.all([
@@ -83,6 +83,31 @@ const About = () => {
       button.textContent = answer.classList.contains('show-answer') ? '-' : '+';
     });
   });
+
+  //syllabus
+
+  const sectionButtons = document.querySelectorAll('.section-button');
+  const sections = document.querySelectorAll('.section');
+  
+  sectionButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Remove active class from all sections
+      sections.forEach(section => section.classList.remove('active'));
+      
+      // Add active class to corresponding section
+      const sectionId = button.dataset.section;
+      const section = document.getElementById(sectionId);
+      section.classList.add('active');
+
+      // Remove active class from all buttons
+      sectionButtons.forEach(btn => btn.classList.remove('active'));
+
+      // Add active class to clicked button
+      button.classList.add('active');
+
+    });
+  });
+    
 
   //customers section
 
@@ -236,7 +261,6 @@ const About = () => {
               );
             })}
             </div>
-            <img class="course-image" src="http://local.overhang.io:8000/asset-v1:test+test01+2023+type@asset+block@photo-1515378960530-7c0da6231fb1.jpeg"></img>
             <div className="content wrapper-continer">
             <h2>Happy Students</h2>
             <div className="about-course-tabs">
