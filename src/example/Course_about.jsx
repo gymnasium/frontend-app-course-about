@@ -46,10 +46,10 @@ const About = () => {
   const [active, setActive] = useState(1);
 
   const Course =
-    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+test2023";
+    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+2023";
 
   const Enrolment =
-    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+test2023";
+    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+2023";
 
   const update_data = async function () {
     const [firstResponse, secondResponse] = await Promise.all([
@@ -111,49 +111,31 @@ const About = () => {
 
   //customers section
 
-  const carousel = document.querySelector(".carousel");
-  const leftArrow = document.querySelector(".left-arrow");
-  const rightArrow = document.querySelector(".right-arrow");
+  let currentIndex = 0;
   const cards = document.querySelectorAll(".card");
-  
-  if(cards & leftArrow & rightArrow & carousel){
-    let cardWidth = cards[0].offsetWidth;
-    let cardMarginRight = parseInt(window.getComputedStyle(cards[0]).marginRight);
-    let cardCount = cards.length;
-    let carouselWidth = (cardWidth + cardMarginRight) * cardCount - cardMarginRight;
-    
-    carousel.style.width = `${carouselWidth}px`;
-    
-    rightArrow.addEventListener("click", () => {
-      let currentScrollPosition = carousel.scrollLeft;
-      let newScrollPosition = currentScrollPosition + cardWidth + cardMarginRight;
-      if (newScrollPosition < carouselWidth) {
-        carousel.scroll({
-          left: newScrollPosition,
-          behavior: "smooth"
-        });
-      } else {
-        carousel.scroll({
-          left: carouselWidth,
-          behavior: "smooth"
-        });
+  const numCards = cards.length;
+
+  let prevbutton = document.getElementById("prev")
+  if(prevbutton){
+      prevbutton.addEventListener("click", () => {
+      cards[currentIndex].style.display = "none";
+      currentIndex--;
+      if (currentIndex < 0) {
+          currentIndex = numCards - 1;
       }
+      cards[currentIndex].style.display = "block";
     });
-    
-    leftArrow.addEventListener("click", () => {
-      let currentScrollPosition = carousel.scrollLeft;
-      let newScrollPosition = currentScrollPosition - cardWidth - cardMarginRight;
-      if (newScrollPosition > 0) {
-        carousel.scroll({
-          left: newScrollPosition,
-          behavior: "smooth"
-        });
-      } else {
-        carousel.scroll({
-          left: 0,
-          behavior: "smooth"
-        });
+  }
+
+  let nextbutton = document.getElementById("next")
+  if(nextbutton){
+    nextbutton.addEventListener("click", () => {
+      cards[currentIndex].style.display = "none";
+      currentIndex++;
+      if (currentIndex >= numCards) {
+          currentIndex = 0;
       }
+      cards[currentIndex].style.display = "block";
     });
   }
 
@@ -261,48 +243,6 @@ const About = () => {
               );
             })}
             </div>
-            <div className="content wrapper-continer">
-            <h2>Happy Students</h2>
-            <div className="about-course-tabs">
-              <Carousel>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-25"
-                    src="https://pic.onlinewebfonts.com/svg/img_237553.png"
-                    alt="First slide"
-                  />
-                  <Carousel.Caption>
-                    <h3>Michael Jones</h3>
-                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate.</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-25"
-                    src="https://pic.onlinewebfonts.com/svg/img_237553.png"
-                    alt="Third slide"
-                  />
-
-                  <Carousel.Caption>
-                    <h3>Second slide label</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-25"
-                    src="https://pic.onlinewebfonts.com/svg/img_237553.png"
-                    alt="Third slide"
-                  />
-
-                  <Carousel.Caption>
-                    <h3>Third slide label</h3>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              </Carousel>
-            </div>
-          </div>
         </div>
       </div>
       </Container>
