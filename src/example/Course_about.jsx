@@ -148,7 +148,7 @@ const About = () => {
             <span> {data?.org}</span>
             <h2>{data?.name}</h2>
           </div>
-          <div>{data?.short_description} </div>
+          <div className="description">{data?.short_description} </div>
         </div>
         <div className="">
           <div className="course-info-banner">
