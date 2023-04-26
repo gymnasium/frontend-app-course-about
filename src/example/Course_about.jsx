@@ -44,26 +44,38 @@ const About = () => {
   const [data, setData] = useState(null);
   const [courseDetails, setCourseDetails] = useState(null);
   const [active, setActive] = useState(1);
+  const [courseId, setCourseId] = useState(null);
 
-  const Course =
-    getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + "course-v1:test+test01+test2023";
-
-  const Enrolment =
-    getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + "course-v1:test+test01+test2023";
-
-  const update_data = async function () {
-    const [firstResponse, secondResponse] = await Promise.all([
-      axios.get(Course),
-      axios.get(Enrolment),
-    ]);
-    console.log(firstResponse.data)
-    setData(firstResponse.data);
-
-    setCourseDetails(secondResponse.data);
-  };
   useEffect(() => {
-    update_data();
+    const url = window.location.pathname;
+    const regex = /courses\/(course-v1:[^/]+)\/about/;
+    const match = url.match(regex);
+    setCourseId(match[1]);
   }, []);
+
+  console.log(courseId);
+
+
+  useEffect(() => {
+    if (courseId) {
+      const Course =
+        getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + courseId;
+  
+      const Enrolment =
+        getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + courseId;
+  
+      const update_data = async function () {
+        const [firstResponse, secondResponse] = await Promise.all([
+          axios.get(Course),
+          axios.get(Enrolment),
+        ]);
+        setData(firstResponse.data);
+  
+        setCourseDetails(secondResponse.data);
+      };
+      update_data();
+    }
+  }, [courseId]);
 
   let date = (str) => {
     let unformatData = new Date(str);
