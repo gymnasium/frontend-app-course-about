@@ -84,3 +84,48 @@
 .students > button:focus {
     outline: none;
 }
+
+@media screen and (max-width: 768px) {
+    .students {
+      flex-direction: column;
+
+      .card {
+        position: relative;
+        width: 100%;
+        height: auto; /* changed from 350px to auto */
+        padding: 20px;
+        background-color: #fff;
+        overflow: hidden;
+        border: none;
+      }
+    }
+  
+    .user-info {
+      flex-direction: column;
+      margin: 20px;
+    }
+  
+    .user-info img {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+
+    .user-info p {
+        overflow-wrap: break-word;
+        overflow-y: auto;
+        max-height: 150px;
+    }
+  
+    .arrow {
+      font-size: 18px;
+    }
+  
+    .arrow.left {
+      left: 10px;
+    }
+  
+    .arrow.right {
+      right: 10px;
+    }
+  }
+  

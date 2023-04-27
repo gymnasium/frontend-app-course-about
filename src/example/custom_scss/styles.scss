@@ -203,6 +203,7 @@ button.enroll-button {
 .tabs {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap; /* Added to wrap the tabs if they don't fit on one line */
 }
 
 .tabitem {
@@ -214,6 +215,14 @@ button.enroll-button {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+@media screen and (max-width: 768px) {
+  .tabitem {
+    width: 100%; /* Set the width to 100% on smaller screens */
+    max-width: 200px; /* Set the maximum width to 200px */
+    padding: 10px; /* Reduce padding on smaller screens */
+  }
 }
 
 .tabitem--inactive {
@@ -228,7 +237,7 @@ button.enroll-button {
   color: #121212;
   font-size: 16px;
   margin: 10px 0;
-}
+} 
 
 .content {
   text-align: center;

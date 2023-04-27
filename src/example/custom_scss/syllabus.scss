@@ -1,12 +1,4 @@
-.menu {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-bottom: 5px;
-  }
-  
   .section-button {
-    width: 150px;
     background-color: transparent;
     border: none;
     color: inherit;
@@ -43,3 +35,31 @@
     display: block;
 }
 
+.syllabus-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-around; /* Updated from 'flex-start' to 'space-around' */
+  flex-wrap: wrap; /* Added to wrap the buttons if they don't fit on one line */
+  padding-bottom: 5px;
+}
+
+.section-button {
+  flex: 1; /* Added to make the buttons take equal widths */
+  text-align: center; /* Added to center the text within the button */
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  margin: 5px; /* Updated from 'margin-right: 10px' to apply margin to all sides */
+  position: relative;
+  border-bottom: 2px solid white;
+}
+
+@media screen and (max-width: 768px) {
+  .section-button {
+    font-size: 0.9em; /* Reduce font size on smaller screens */
+  }
+}
