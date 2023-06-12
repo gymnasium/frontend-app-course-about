@@ -61,7 +61,7 @@ const About = () => {
     });
   
     try {
-      const response = await fetch('https://community.abzt.de/change_enrollment', {
+      const response = await fetch('http://community.abzt.de/change_enrollment', {
         method: 'POST',
         headers: {
           'Accept': 'text/plain, */*; q=0.01',
