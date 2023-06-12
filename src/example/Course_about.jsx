@@ -45,6 +45,7 @@ const About = () => {
   const [courseDetails, setCourseDetails] = useState(null);
   const [active, setActive] = useState(1);
   const [courseId, setCourseId] = useState(null);
+  const [enrolled, setEnrolled] = useState(false);
 
   useEffect(() => {
     const url = window.location.pathname;
@@ -52,6 +53,23 @@ const About = () => {
     const match = url.match(regex);
     setCourseId(match[1]);
   }, []);
+
+  const handleEnroll = async () => {
+    try {
+      const res = await axios.post(
+        `${getConfig().LMS_BASE_URL}/api/enrollment/v1/enrollment`,
+        {
+          course_details: courseId
+        }
+      );
+  
+      if (res.status === 200) {
+        setEnrolled(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   console.log(courseId);
 
@@ -214,7 +232,9 @@ const About = () => {
                 <strong className="text-block-footer">End: {date(data?.end)}</strong>
               </div>
             </span>
-            <Button className="">Enroll</Button>
+            <Button onClick={handleEnroll} disabled={enrolled} className="">
+              Enroll
+            </Button>
           </div>
           <div>
             <img
@@ -235,10 +255,9 @@ const About = () => {
               ))}
             </div>
             <div className="tabs">
-              <Button className="tab-item enroll-button">
-                {" "}
-                Enroll now <br /> Starts {date(data?.start)}
-              </Button>
+            <Button onClick={handleEnroll} id="enroll-button" disabled={enrolled}>
+              {enrolled ? 'Enrolled' : 'Enroll now'}
+            </Button>
             </div>
           </div>
 
