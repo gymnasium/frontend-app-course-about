@@ -55,24 +55,25 @@ const About = () => {
   }, []);
 
   const handleEnroll = async () => {
-    try {
-      const res = await axios.post(
-        `${getConfig().LMS_BASE_URL}/api/enrollment/v1/enrollment`,
-        {
-          course_details: courseId
-        }
-      );
+    const body = new URLSearchParams({
+      'course_id': courseId,
+      'enrollment_action': 'enroll'
+    });
   
-      if (res.status === 200) {
-        setEnrolled(true);
-      }
+    try {
+      const response = await fetch('https://community.abzt.de/change_enrollment', {
+        method: 'POST',
+        headers: {
+          'Accept': 'text/plain, */*; q=0.01',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'X-CsrfToken': '...', // Fetch or construct the CSRF token here
+        },
+        body: body
+      });
+      //...
     } catch (error) {
       console.error(error);
     }
-  };
-
-  console.log(courseId);
-
 
   useEffect(() => {
     if (courseId) {
