@@ -54,21 +54,40 @@ const About = () => {
     setCourseId(match[1]);
   }, []);
 
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
   const handleEnroll = async () => {
     const body = new URLSearchParams({
       'course_id': courseId,
       'enrollment_action': 'enroll'
     });
-  
+    
+    const csrftoken = getCookie('csrftoken');
+
     try {
       const response = await fetch('community.abzt.de/change_enrollment', {
         method: 'POST',
         headers: {
           'Accept': 'text/plain, */*; q=0.01',
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-          'X-CsrfToken': '...', // Fetch or construct the CSRF token here
+          'x-csrftoken': csrftoken
         },
-        body: body
+        body: body,
+        credentials: 'include'
       });
       //...
     } catch (error) {
