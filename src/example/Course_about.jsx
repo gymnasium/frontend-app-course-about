@@ -100,23 +100,26 @@ const About = () => {
 
   useEffect(() => {
     if (courseId) {
-      try {
-        const encodedCourseId = encodeURIComponent(courseId);
-        const enrollmentResponse = fetch(`https://community.abzt.de/api/enrollment/v1/enrollment/${encodedCourseId}`, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          },
-          credentials: 'include'
-        });
-      
-        console.log(enrollmentResponse)
-        if (enrollmentResponse) { 
+      const encodedCourseId = encodeURIComponent(courseId);
+      fetch(`https://community.abzt.de/api/enrollment/v1/enrollment/${encodedCourseId}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (Object.keys(data).length !== 0) { // Check if the object is not empty
           setEnrolled(true);
+        } else {
+          setEnrolled(false);
         }
-      } catch (error) {
+      })
+      .catch(error => {
         console.error('Error occurred:', error);
-        }
+      });
     }
   }, [courseId, data]);
   
