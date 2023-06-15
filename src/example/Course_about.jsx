@@ -102,7 +102,7 @@ const About = () => {
   if(courseId){
     try {
       const encodedCourseId = encodeURIComponent(courseId);
-      const enrollmentResponse = fetch(`https://community.abzt.de/api/enrollment/v1/enrollment/?course_id=${encodedCourseId}`, {
+      const enrollmentResponse = fetch(`https://community.abzt.de/api/enrollment/v1/enrollment/${encodedCourseId}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
