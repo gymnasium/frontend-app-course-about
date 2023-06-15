@@ -110,10 +110,8 @@ const About = () => {
         credentials: 'include'
       });
     
-      const enrollmentData = enrollmentResponse.json(); // assuming the response data is in JSON format
       console.log(enrollmentResponse)
-      console.log(enrollmentData);
-      if (enrollmentData) { 
+      if (enrollmentResponse) { 
         setEnrolled(true);
       }
     } catch (error) {
