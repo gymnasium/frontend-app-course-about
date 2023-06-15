@@ -89,6 +89,9 @@ const About = () => {
         body: body,
         credentials: 'include'
       });
+      if (response.ok) { 
+        setEnrolled(true);
+      }
       //...
     } catch (error) {
       console.error(error);
@@ -96,21 +99,28 @@ const About = () => {
   }
 
   // After the enrollment, check the enrollment status
-  try {
-    const enrollmentResponse = fetch(`/api/enrollment/v1/enrollments?course_id=${courseId}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
-      credentials: 'include'
-    });
-  
-    const enrollmentData = enrollmentResponse.json(); // assuming the response data is in JSON format
-    console.log(enrollmentResponse)
-    console.log(enrollmentData);
-  } catch (error) {
-    console.error('Error occurred:', error);
+  if(courseId){
+    try {
+      const encodedCourseId = encodeURIComponent(courseId);
+      const enrollmentResponse = fetch(`https://community.abzt.de/api/enrollment/v1/enrollment/?course_id=${encodedCourseId}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        credentials: 'include'
+      });
+    
+      const enrollmentData = enrollmentResponse.json(); // assuming the response data is in JSON format
+      console.log(enrollmentResponse)
+      console.log(enrollmentData);
+      if (enrollmentData) { 
+        setEnrolled(true);
+      }
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
   }
+  
 
   useEffect(() => {
     if (courseId) {
@@ -270,8 +280,8 @@ const About = () => {
                 <strong className="text-block-footer">End: {date(data?.end)}</strong>
               </div>
             </span>
-            <Button onClick={handleEnroll} disabled={enrolled} className="">
-              Enroll
+            <Button onClick={handleEnroll} disabled={enrolled}>
+              {enrolled ? 'Enrolled' : 'Enroll'}
             </Button>
           </div>
           <div>
@@ -294,7 +304,7 @@ const About = () => {
             </div>
             <div className="tabs">
             <Button onClick={handleEnroll} id="enroll-button" disabled={enrolled}>
-              {enrolled ? 'Enrolled' : 'Enroll now'}
+              {enrolled ? 'You are already enrolled' : 'Enroll now'}
             </Button>
             </div>
           </div>
