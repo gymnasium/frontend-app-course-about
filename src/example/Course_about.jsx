@@ -95,6 +95,23 @@ const About = () => {
     }
   }
 
+  // After the enrollment, check the enrollment status
+  try {
+    const enrollmentResponse = fetch(`/api/enrollment/v1/enrollments?course_id=${courseId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+      credentials: 'include'
+    });
+  
+    const enrollmentData = enrollmentResponse.json(); // assuming the response data is in JSON format
+    console.log(enrollmentResponse)
+    console.log(enrollmentData);
+  } catch (error) {
+    console.error('Error occurred:', error);
+  }
+
   useEffect(() => {
     if (courseId) {
       const Course =
