@@ -44,7 +44,7 @@ const About = () => {
   const [data, setData] = useState(null);
   const [courseDetails, setCourseDetails] = useState(null);
   const [active, setActive] = useState(1);
-  const [courseId, setCourseId] = useState(null);
+  const [courseId, setCourseId] = useState();
   const [enrolled, setEnrolled] = useState(false);
 
   useEffect(() => {
@@ -98,26 +98,27 @@ const About = () => {
     }
   }
 
-  // After the enrollment, check the enrollment status
-  if(courseId){
-    try {
-      const encodedCourseId = encodeURIComponent(courseId);
-      const enrollmentResponse = fetch(`https://community.abzt.de/api/enrollment/v1/enrollment/${encodedCourseId}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-        credentials: 'include'
-      });
-    
-      console.log(enrollmentResponse)
-      if (enrollmentResponse) { 
-        setEnrolled(true);
-      }
-    } catch (error) {
-      console.error('Error occurred:', error);
+  useEffect(() => {
+    if (courseId) {
+      try {
+        const encodedCourseId = encodeURIComponent(courseId);
+        const enrollmentResponse = fetch(`https://community.abzt.de/api/enrollment/v1/enrollment/${encodedCourseId}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+          credentials: 'include'
+        });
+      
+        console.log(enrollmentResponse)
+        if (enrollmentResponse) { 
+          setEnrolled(true);
+        }
+      } catch (error) {
+        console.error('Error occurred:', error);
+        }
     }
-  }
+  }, [courseId, data]);
   
 
   useEffect(() => {
