@@ -46,6 +46,9 @@ const About = () => {
   const [active, setActive] = useState(1);
   const [courseId, setCourseId] = useState();
   const [enrolled, setEnrolled] = useState(false);
+  const [enrollMessage, setEnrollMessage] = useState("");
+
+  const url = "https://community.abzt.de"
 
   useEffect(() => {
     const url = window.location.pathname;
@@ -79,7 +82,7 @@ const About = () => {
     const csrftoken = getCookie('csrftoken');
 
     try {
-      const response = await fetch('https://community.abzt.de/change_enrollment', {
+      const response = await fetch(`${url}/change_enrollment`, {
         method: 'POST',
         headers: {
           'Accept': 'text/plain, */*; q=0.01',
@@ -101,7 +104,7 @@ const About = () => {
   useEffect(() => {
     if (courseId) {
       const encodedCourseId = encodeURIComponent(courseId);
-      fetch(`https://community.abzt.de/api/enrollment/v1/enrollment/${encodedCourseId}`, {
+      fetch(`${url}/api/enrollment/v1/enrollment/${encodedCourseId}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -110,8 +113,23 @@ const About = () => {
       })
       .then(response => response.json())
       .then(data => {
-        if (data.is_active) {
+        if (Object.keys(data).length !== 0) { // Check if the object is not empty
+          if(data.is_active){
           setEnrolled(true);
+        } else {
+          if (data.is_course_full) {
+            setEnrollMessage("Course is full");
+          } else if (data.invitation_only && !data.can_enroll) {
+            setEnrollMessage("Enrollment in this course is by invitation only");
+          } else if (!data.is_shib_course && !data.can_enroll) {
+            setEnrollMessage("Enrollment is Closed");
+          } else if (data.allow_anonymous) {
+            if (data.show_courseware_link) {
+              setCourseLink(data.course_target);
+              setShowCourseLink(true);
+            }
+          }
+        }
         } else {
           setEnrolled(false);
         }
@@ -281,9 +299,20 @@ const About = () => {
                 <strong className="text-block-footer">End: {date(data?.end)}</strong>
               </div>
             </span>
-            <Button onClick={handleEnroll} disabled={enrolled}>
-              {enrolled ? 'Enrolled' : 'Enroll'}
-            </Button>
+            {enrollMessage ? (
+              <div className="btn btn-primary" href="">
+                {enrollMessage}
+              </div>
+            ) : (
+              <Button onClick={handleEnroll} disabled={enrolled}>
+                {enrolled ? 'Enrolled' : 'Enroll'}
+              </Button>
+            )}
+            {enrolled && (
+              <a className="btn btn-primary" href={`${url}/learning/course/${courseId}`}>
+                View Course
+              </a>
+            )}
           </div>
           <div>
             <img
