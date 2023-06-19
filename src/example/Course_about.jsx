@@ -301,9 +301,9 @@ const About = () => {
               </div>
             </span>
             {enrollMessage ? (
-              <div className="btn btn-primary" href="">
+              <Button disabled="true">
                 {enrollMessage}
-              </div>
+              </Button>
             ) : (
               <Button onClick={handleEnroll} disabled={enrolled}>
                 {enrolled ? 'Enrolled' : 'Enroll'}
@@ -335,9 +335,9 @@ const About = () => {
             </div>
             <div className="tabs">
             {enrollMessage ? (
-              <div id="enroll-button">
+              <Button id="enroll-button" disabled="true">
                 {enrollMessage}
-              </div>
+              </Button>
             ) : (
               <Button onClick={handleEnroll} id="enroll-button" disabled={enrolled}>
               {enrolled ? 'You are already enrolled' : 'Enroll now'}
