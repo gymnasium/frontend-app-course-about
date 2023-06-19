@@ -110,7 +110,7 @@ const About = () => {
       })
       .then(response => response.json())
       .then(data => {
-        if (Object.keys(data).length !== 0) { // Check if the object is not empty
+        if (data.is_active) {
           setEnrolled(true);
         } else {
           setEnrolled(false);
