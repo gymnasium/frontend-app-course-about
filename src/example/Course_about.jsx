@@ -333,9 +333,15 @@ const About = () => {
               ))}
             </div>
             <div className="tabs">
-            <Button onClick={handleEnroll} id="enroll-button" disabled={enrolled}>
+            {enrollMessage ? (
+              <div id="enroll-button">
+                {enrollMessage}
+              </div>
+            ) : (
+              <Button onClick={handleEnroll} id="enroll-button" disabled={enrolled}>
               {enrolled ? 'You are already enrolled' : 'Enroll now'}
-            </Button>
+              </Button>
+            )}
             </div>
           </div>
 
