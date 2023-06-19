@@ -49,6 +49,7 @@ const About = () => {
   const [enrollMessage, setEnrollMessage] = useState("");
 
   const url = "https://community.abzt.de"
+  const appsurl = "https://apps.community.abzt.de"
 
   useEffect(() => {
     const url = window.location.pathname;
@@ -309,7 +310,7 @@ const About = () => {
               </Button>
             )}
             {enrolled && (
-              <a className="btn btn-primary" href={`${url}/learning/course/${courseId}`}>
+              <a className="btn btn-primary" href={`${appsurl}/learning/course/${courseId}/home`}>
                 View Course
               </a>
             )}
