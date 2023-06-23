@@ -51,6 +51,9 @@ const About = () => {
   const url = "https://community.abzt.de"
   const appsurl = "https://apps.community.abzt.de"
 
+  // const url = "http://local.overhang.io:8000"
+  // const appsurl = "https://apps.local.overhang.io:3000"
+
   useEffect(() => {
     const url = window.location.pathname;
     const regex = /courses\/(course-v1:[^/]+)\/about/;
@@ -112,25 +115,41 @@ const About = () => {
         },
         credentials: 'include'
       })
-      .then(response => response.json())
-      .then(data => {
+      .then(response => response.text()) // Extract the text from the response
+      .then(text => {
+        // If the response text is empty, set enrolled to false and return
+        if (!text) {
+          setEnrolled(false);
+          
+          // Make another API request to check for enrollment closure or possibility
+          fetch(`${url}/api/course_home/v1/outline/${encodedCourseId}`, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+            },
+            credentials: 'include'
+          })
+          .then(res => res.json())
+          .then(outlineData => {
+            if (!outlineData) {
+              setEnrollMessage("Enrollment is Closed");
+            } else if (outlineData.enroll_alert && outlineData.enroll_alert.can_enroll) {
+              // Proceed with enrollment or other logic
+            }
+          });
+  
+          return;
+        }
+    
+        // Otherwise, parse the text as JSON and continue
+        const data = JSON.parse(text);
+    
         if (Object.keys(data).length !== 0) { // Check if the object is not empty
           if(data.is_active){
-          setEnrolled(true);
-        } else {
-          if (data.is_course_full) {
-            setEnrollMessage("Course is full");
-          } else if (data.invitation_only && !data.can_enroll) {
-            setEnrollMessage("Enrollment in this course is by invitation only");
-          } else if (!data.is_shib_course && !data.can_enroll) {
-            setEnrollMessage("Enrollment is Closed");
-          } else if (data.allow_anonymous) {
-            if (data.show_courseware_link) {
-              setCourseLink(data.course_target);
-              setShowCourseLink(true);
-            }
-          }
-        }
+            setEnrolled(true);
+            setCourseLink(data.course_target);
+            setShowCourseLink(true);
+          } 
         } else {
           setEnrolled(false);
         }
@@ -140,6 +159,7 @@ const About = () => {
       });
     }
   }, [courseId, data]);
+  
   
 
   useEffect(() => {
