@@ -48,11 +48,11 @@ const About = () => {
   const [enrolled, setEnrolled] = useState(false);
   const [enrollMessage, setEnrollMessage] = useState("");
 
-  const url = "https://community.abzt.de"
-  const appsurl = "https://apps.community.abzt.de"
+  // const url = "https://community.abzt.de"
+  // const appsurl = "https://apps.community.abzt.de"
 
-  // const url = "http://local.overhang.io:8000"
-  // const appsurl = "https://apps.local.overhang.io:3000"
+  const url = "http://local.overhang.io:8000"
+  const appsurl = "https://apps.local.overhang.io:3000"
 
   useEffect(() => {
     const url = window.location.pathname;
@@ -129,16 +129,20 @@ const About = () => {
             },
             credentials: 'include'
           })
-          .then(res => res.json())
-          .then(outlineData => {
-            if (!outlineData) {
-              setEnrollMessage("Enrollment is Closed");
-            } else if (outlineData.enroll_alert && outlineData.enroll_alert.can_enroll) {
-              // Proceed with enrollment or other logic
+          .then(res => {
+            if(res.redirected) {
+              setEnrollMessage("You can't enroll");
+              return {};
+            } else {
+              return res.json();
             }
-          });
-  
-          return;
+          })
+          .then(outlineData => {
+            // If "can_enroll" is false, set enroll message
+            if (outlineData.enroll_alert && !outlineData.enroll_alert.can_enroll) {
+              setEnrollMessage("You can't enroll");
+            }
+          })
         }
     
         // Otherwise, parse the text as JSON and continue
