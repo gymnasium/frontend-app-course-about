@@ -281,9 +281,9 @@ const About = () => {
                 <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
               </svg>
               <div className="text-block">
-                <strong className="text-block-header"> +/-2 months</strong>
+                <strong className="text-block-header"> Effort</strong>
                 <br />
-                <strong className="text-block-footer">2-4h per week</strong>
+                <strong className="text-block-footer">{data?.effort} per week</strong>
               </div>
             </span>
             <span className="info-tab">
