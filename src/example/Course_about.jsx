@@ -1,6 +1,8 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, Container, Col, Carousel } from "@edx/paragon";
+import { AppContext } from '@edx/frontend-platform/react';
+
 
 import Row from "react-bootstrap/Row";
 import axios from "axios";
@@ -54,6 +56,9 @@ const About = () => {
   // const url = "http://local.overhang.io:8000"
   // const appsurl = "https://apps.local.overhang.io:3000"
 
+  const { authenticatedUser } = useContext(AppContext);
+  console.log(authenticatedUser)
+
   useEffect(() => {
     const url = window.location.pathname;
     const regex = /courses\/(course-v1:[^/]+)\/about/;
@@ -78,6 +83,13 @@ const About = () => {
   }
 
   const handleEnroll = async () => {
+
+    if (!authenticatedUser) {
+      // If not authenticated, redirect to login
+      window.location.href = '/authn/login';
+      return;
+    }
+    
     const body = new URLSearchParams({
       'course_id': courseId,
       'enrollment_action': 'enroll'
