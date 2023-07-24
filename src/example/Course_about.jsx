@@ -86,10 +86,10 @@ const About = () => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      window.location.href = '/authn/login';
+      window.location.href = 'https://apps.community.abzt.de/authn/login';
       return;
     }
-    
+
     const body = new URLSearchParams({
       'course_id': courseId,
       'enrollment_action': 'enroll'
