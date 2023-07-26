@@ -86,7 +86,7 @@ const About = () => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      redirection = `/courses/${courseId}/about`
+      let redirection = `/courses/${courseId}/about`
       window.location.href = `https://apps.community.abzt.de/authn/login?next=${encodeURIComponent(redirection)}`;
       return;
     }
