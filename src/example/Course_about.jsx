@@ -21,13 +21,13 @@ const tabItems = [
   },
   {
     id: 2,
-    title: "info",
-    section_class: "content",
+    title: "Course info",
+    section_class: "info",
   },
   {
     id: 3,
     title: "Syllabus",
-    section_class: "prerequisites",
+    section_class: "syllabus",
   },
   {
     id: 4,
@@ -37,7 +37,7 @@ const tabItems = [
   {
     id: 5,
     title: "FAQs",
-    section_class: "faqs",
+    section_class: "faq",
   },
 ];
 
@@ -57,7 +57,6 @@ const About = () => {
   // const appsurl = "https://apps.local.overhang.io:3000"
 
   const { authenticatedUser } = useContext(AppContext);
-  console.log(authenticatedUser)
 
   useEffect(() => {
     const url = window.location.pathname;
@@ -81,6 +80,16 @@ const About = () => {
     }
     return cookieValue;
   }
+
+  const handleTabClick = (id, section_class) => {
+    setActive(id);
+
+    const sectionElement = document.getElementById(section_class);
+    if (sectionElement) {
+        sectionElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
 
   const handleEnroll = async () => {
 
@@ -193,9 +202,7 @@ const About = () => {
           axios.get(Enrolment),
         ]);
         setData(firstResponse.data);
-        console.log(firstResponse.data)
         setCourseDetails(secondResponse.data);
-        console.log(secondResponse.data)
       };
       update_data();
     }
@@ -367,14 +374,14 @@ const About = () => {
           </div>
           <div className="course-info-banner2">
             <div className="tabs">
-              {tabItems.map(({ id, title }) => (
-                <TabItemComponent
+            {tabItems.map(({ id, title, section_class }) => (
+              <TabItemComponent
                   key={title}
                   title={title}
-                  onItemClicked={() => setActive(id)}
+                  onItemClicked={() => handleTabClick(id, section_class)}
                   isActive={active === id}
-                />
-              ))}
+              />
+            ))}
             </div>
             <div className="tabs">
             {enrollMessage ? (
