@@ -402,7 +402,7 @@ const About = () => {
               return active === id ? (
                 <div
                   key={id}
-                  className={`about-course-tabs ${section_class}`}
+                  className={`about-course-tabs`}
                   dangerouslySetInnerHTML={{ __html: data?.overview }}
                 ></div>
               ) : (
