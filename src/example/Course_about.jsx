@@ -83,12 +83,13 @@ const About = () => {
 
   const handleTabClick = (id, section_class) => {
     setActive(id);
-
-    const sectionElement = document.getElementById(section_class);
+  
+    const sectionElement = document.querySelector('.' + section_class);
     if (sectionElement) {
-        sectionElement.scrollIntoView({ behavior: 'smooth' });
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
     }
   }
+  
 
 
   const handleEnroll = async () => {
