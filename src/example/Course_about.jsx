@@ -351,15 +351,19 @@ const About = () => {
                 <strong className="text-block-footer">End: {date(data?.end)}</strong>
               </div>
             </span>
-            {enrollMessage ? (
-              <Button disabled="true">
-                {enrollMessage}
-              </Button>
-            ) : (
-              <Button onClick={handleEnroll} disabled={enrolled}>
-                {enrolled ? 'Enrolled' : 'Enroll'}
-              </Button>
-            )}
+            {
+              enrollMessage ? (
+                <Button disabled="true">
+                  {enrollMessage}
+                </Button>
+              ) : (
+                !enrolled && (
+                  <Button onClick={handleEnroll}>
+                    'Enroll'
+                  </Button>
+                )
+              )
+            }
             {enrolled && (
               <a className="btn btn-primary" href={`${appsurl}/learning/course/${courseId}/home`}>
                 View Course
@@ -383,9 +387,7 @@ const About = () => {
                   isActive={active === id}
               />
             ))}
-            </div>
-            <div className="tabs">
-            {enrollMessage ? (
+              {enrollMessage ? (
               <Button id="enroll-button" disabled="true">
                 {enrollMessage}
               </Button>
