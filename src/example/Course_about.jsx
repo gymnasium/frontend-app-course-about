@@ -388,7 +388,7 @@ const About = () => {
               />
             ))}
               {enrollMessage ? (
-              <Button id="enroll-button" disabled="true">
+              <Button id="enroll-button" class="tabitem" disabled="true">
                 {enrollMessage}
               </Button>
             ) : (
