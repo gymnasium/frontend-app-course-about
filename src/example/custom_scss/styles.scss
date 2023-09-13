@@ -106,11 +106,6 @@ div.wrapper-continer {
       @extend .theme-btn;
     }
   }
-  @media (max-width: 499px) {
-    .wrapper-continer {
-      display: grid;
-    }
-  }
 }
 
 .white-continer-claim {
@@ -134,6 +129,17 @@ img.course-image {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+/* Media query for screens 500px or smaller */
+@media (max-width: 500px) {
+  .course-info-banner {
+    display: grid;
+    /* Add your grid properties here, for example: */
+    grid-template-columns: 1fr 1fr; /* This creates two equal columns, adjust as needed */
+    gap: 10px; /* Adjust the gap between grid items if needed */
+  }
+}
+
 
 .course-info-banner2 {
   display: flex;
