@@ -130,16 +130,10 @@ img.course-image {
   margin-bottom: 10px;
 }
 
-.course-info-banner {background-color: red;}
-
 /* Media query for screens 500px or smaller */
 @media (max-width: 500px) {
   .course-info-banner {
     display: grid;
-    background-color: blue;
-    /* Add your grid properties here, for example: */
-    grid-template-columns: 1fr 1fr; /* This creates two equal columns, adjust as needed */
-    gap: 10px; /* Adjust the gap between grid items if needed */
   }
 }
 
