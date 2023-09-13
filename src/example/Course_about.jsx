@@ -359,7 +359,7 @@ const About = () => {
               ) : (
                 !enrolled && (
                   <Button onClick={handleEnroll}>
-                    'Enroll'
+                    Enroll
                   </Button>
                 )
               )
