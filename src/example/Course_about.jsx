@@ -392,7 +392,7 @@ const About = () => {
                 {enrollMessage}
               </Button>
             ) : (
-              <Button onClick={handleEnroll} id="enroll-button" disabled={enrolled}>
+              <Button onClick={handleEnroll} id="enroll-button" class="tabitem" disabled={enrolled}>
               {enrolled ? 'You are already enrolled' : 'Enroll now'}
               </Button>
             )}
