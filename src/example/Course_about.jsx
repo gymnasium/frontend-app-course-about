@@ -387,6 +387,7 @@ const About = () => {
                   isActive={active === id}
               />
             ))}
+            <div class="tabitem">
               {enrollMessage ? (
               <Button id="enroll-button" class="tabitem" disabled="true">
                 {enrollMessage}
@@ -396,6 +397,7 @@ const About = () => {
               {enrolled ? 'You are already enrolled' : 'Enroll now'}
               </Button>
             )}
+            </div>
             </div>
           </div>
 
