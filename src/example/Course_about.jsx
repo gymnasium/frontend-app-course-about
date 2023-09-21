@@ -365,7 +365,7 @@ const About = () => {
               )
             }
             {enrolled && (
-              <a className="btn btn-primary" href={`${appsurl}/learning/course/${courseId}/home`}>
+              <a className="btn btn-primary big-button" href={`${appsurl}/learning/course/${courseId}/home`}>
                 View Course
               </a>
             )}
