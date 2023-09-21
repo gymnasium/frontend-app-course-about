@@ -353,12 +353,12 @@ const About = () => {
             </span>
             {
               enrollMessage ? (
-                <Button disabled="true">
+                <Button className="btn btn-primary big-button" disabled="true">
                   {enrollMessage}
                 </Button>
               ) : (
                 !enrolled && (
-                  <Button onClick={handleEnroll}>
+                  <Button className="btn btn-primary big-button" onClick={handleEnroll}>
                     Enroll
                   </Button>
                 )
