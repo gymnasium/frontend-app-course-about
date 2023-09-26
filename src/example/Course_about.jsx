@@ -13,6 +13,9 @@ import { useParams } from "react-router";
 
 import TabsComponent from "./Tabs";
 
+import "animate.css/animate.min.css";
+import { AnimationOnScroll } from 'react-animation-on-scroll';
+
 const tabItems = [
   {
     id: 1,
@@ -287,6 +290,7 @@ const About = () => {
     <main>
     <Container className="py-5">
       <div className="white-continer-claim">
+        <AnimationOnScroll duration={2} animateIn="animate__animated animate__fadeInDown">
         <div className="wrapper-continer wrapper">
           <div>
             <span> {data?.org}</span>
@@ -294,6 +298,7 @@ const About = () => {
           </div>
           <div className="description">{data?.short_description} </div>
         </div>
+        </AnimationOnScroll>
         <div className="">
           <div className="course-info-banner">
             <span className="info-tab">
