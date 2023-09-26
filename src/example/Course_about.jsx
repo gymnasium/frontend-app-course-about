@@ -301,7 +301,6 @@ const About = () => {
         </AnimationOnScroll>
         <div className="">
           <div className="course-info-banner">
-            <AnimationOnScroll duration={2.2} animateIn="animate__animated animate__fadeInDown">
             <span className="info-tab">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
                 <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
@@ -375,7 +374,6 @@ const About = () => {
                 View Course
               </a>
             )}
-            </AnimationOnScroll>
           </div>
           <div>
             <img
