@@ -411,11 +411,12 @@ const About = () => {
           <div className="content wrapper-continer">
             {tabItems.map(({ id, section_class }) => {
               return active === id ? (
+                <AnimationOnScroll duration={1.5} animateIn="animate__animated animate__fadeInLeft">
                 <div
                   key={id}
                   className={`about-course-tabs`}
                   dangerouslySetInnerHTML={{ __html: data?.overview }}
-                ></div>
+                ></div></AnimationOnScroll>
               ) : (
                 ""
               );
