@@ -1,11 +1,9 @@
-transifex_resource = frontend-template-application
-transifex_langs = "ar,fr,es_419,zh_CN"
+export TRANSIFEX_RESOURCE=frontend-app-course-about
+transifex_langs = "ar,fr,es_419,zh_CN,pt,it,de,uk,ru,hi,fr_CA"
 
 transifex_utils = ./node_modules/.bin/transifex-utils.js
 i18n = ./src/i18n
 transifex_input = $(i18n)/transifex_input.json
-tx_url1 = https://www.transifex.com/api/2/project/edx-platform/resource/$(transifex_resource)/translation/en/strings/
-tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/$(transifex_resource)/source/
 
 # This directory must match .babelrc .
 transifex_temp = ./temp/babel-plugin-react-intl
@@ -38,12 +36,30 @@ push_translations:
 	# Pushing strings to Transifex...
 	tx push -s
 	# Fetching hashes from Transifex...
-	./node_modules/reactifex/bash_scripts/get_hashed_strings.sh $(tx_url1)
+	./node_modules/@edx/reactifex/bash_scripts/get_hashed_strings_v3.sh
 	# Writing out comments to file...
-	$(transifex_utils) $(transifex_temp) --comments
+	$(transifex_utils) $(transifex_temp) --comments --v3-scripts-path
 	# Pushing comments to Transifex...
-	./node_modules/reactifex/bash_scripts/put_comments.sh $(tx_url2)
+	./node_modules/@edx/reactifex/bash_scripts/put_comments_v3.sh
 
 # Pulls translations from Transifex.
 pull_translations:
-	tx pull -t -f --mode reviewed --languages=$(transifex_langs)
+	tx pull -f --mode reviewed --languages=$(transifex_langs)
+
+# This target is used by Travis.
+validate-no-uncommitted-package-lock-changes:
+	# Checking for package-lock.json changes...
+	git diff --exit-code package-lock.json
+
+.PHONY: validate
+validate:
+	make validate-no-uncommitted-package-lock-changes
+	npm run i18n_extract
+	npm run lint -- --max-warnings 0
+	npm run test
+	npm run build
+
+.PHONY: validate.ci
+validate.ci:
+	npm ci
+	make validate
