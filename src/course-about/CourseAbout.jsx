@@ -66,6 +66,7 @@ const CourseAbout = () => {
   const [enrollMessage, setEnrollMessage] = useState("");
 
   const url = "http://local.overhang.io:8000"
+  const mfeLearning = "https://apps.local.overhang.io:2000"
   const appsurl = "https://apps.local.overhang.io:3000"
 
   const { authenticatedUser } = useContext(AppContext);
@@ -372,7 +373,7 @@ const CourseAbout = () => {
               )
             }
             {enrolled && (
-              <a className="button" href={`${appsurl}/learning/course/${courseId}/home`}>
+              <a className="button" href={`${mfeLearning}/learning/course/${courseId}/home`}>
                 View Course
               </a>
             )}
