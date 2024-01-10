@@ -35,8 +35,9 @@
   },
   "dependencies": {
     "@edx/frontend-component-header": "github:gymnasium/frontend-component-header#gym.palm.4",
+    "@edx/frontend-component-footer": "github:gymnasium/frontend-component-footer#gym.palm.4",
     "@edx/frontend-platform": "4.6.0",
-    "@edx/paragon": "20.45.0",
+    "@edx/paragon": "20.46.3",
     "@fortawesome/fontawesome-svg-core": "6.4.0",
     "@fortawesome/free-brands-svg-icons": "6.4.0",
     "@fortawesome/free-regular-svg-icons": "6.4.0",
@@ -55,8 +56,8 @@
     "regenerator-runtime": "0.13.11"
   },
   "devDependencies": {
-    "@edx/browserslist-config": "^1.2.0",
-    "@edx/frontend-build": "12.9.17",
+    "@edx/browserslist-config": "1.2.0",
+    "@edx/frontend-build": "npm:@openedx/frontend-build@13.0.24",
     "copy-webpack-plugin": "^11.0.0",
     "glob": "8.1.0",
     "husky": "8.0.3",
