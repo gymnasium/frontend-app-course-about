@@ -10,19 +10,17 @@ import ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
 import { useParams } from "react-router";
 
-// import { GymHeader as Header, messages as headerMessages } from '../frontend-component-header/src';
-import { GymHeader as Header, messages as headerMessages } from '@edx/frontend-component-header';
-import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
-
 import appMessages from './i18n';
 import CourseAbout from './course-about/CourseAbout';
 
 import './index.scss';
 
-var current = Date.now();
+import GymSettings, { GymFooter, GymHeader } from './gym-frontend-components';
+const timestamp = Date.now();
+const settings = await GymSettings;
+const root = settings.urls.root; // should be same as marketing URL
 const config = getConfig();
-const settings = `${config.MARKETING_SITE_BASE_URL}/feeds/config.json`;
-const css = `${config.MARKETING_SITE_BASE_URL}/css/mfe.css?${current}`;
+const css = `${root}${settings.css.mfe}?${timestamp}`;
 const title = `Course About | ${getConfig().SITE_NAME}`;
 
 subscribe(APP_READY, () => {
@@ -35,9 +33,9 @@ subscribe(APP_READY, () => {
         <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
         <link rel="stylesheet" href={css} />
       </Helmet>
-      <Header secondaryNav="courses" />
+      <GymHeader secondaryNav="courses" />
       <CourseAbout />
-      <Footer />
+      <GymFooter />
     </AppProvider>,
     document.getElementById('root'),
   );
@@ -49,8 +47,6 @@ subscribe(APP_INIT_ERROR, (error) => {
 
 initialize({
   messages: [
-    appMessages,
-    headerMessages,
-    footerMessages,
+    appMessages
   ],
 });
