@@ -312,7 +312,8 @@ const CourseAbout = () => {
       <div className="white-continer-claim">
         <div className="wrapper-continer wrapper">
           <div>
-            <span> {data?.org}</span>
+
+            <span>{data?.org}-{data?.number}</span>
             <h2>{data?.name}</h2>
           </div>
           <div className="description" dangerouslySetInnerHTML={desc} />
