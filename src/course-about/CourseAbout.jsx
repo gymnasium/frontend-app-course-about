@@ -65,9 +65,10 @@ const CourseAbout = () => {
   const [enrolled, setEnrolled] = useState(false);
   const [enrollMessage, setEnrollMessage] = useState("");
 
+  // TODO: use .env files for these
   const url = "http://local.overhang.io:8000"
-  const mfeLearning = "https://apps.local.overhang.io:2000"
-  const appsurl = "https://apps.local.overhang.io:3000"
+  const mfeLearning = "http://apps.local.overhang.io:2000"
+  const appsurl = "http://apps.local.overhang.io:3000"
 
   const { authenticatedUser } = useContext(AppContext);
 
