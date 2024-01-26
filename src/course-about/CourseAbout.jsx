@@ -9,6 +9,8 @@ import TabItemComponent from "./TabItem";
 import { getConfig } from "@edx/frontend-platform";
 import { useParams } from "react-router";
 
+const config = getConfig();
+
 import TabsComponent from "./Tabs";
 
 const tabItems = [
@@ -103,15 +105,13 @@ const CourseAbout = () => {
       sectionElement.scrollIntoView({ behavior: 'smooth' });
     }
   }
-  
-  
 
   const handleEnroll = async () => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      let redirection = `/courses/${courseId}/about`
-      window.location.href = `/authn/login?next=${encodeURIComponent(redirection)}`;
+      let redirection = `${config.LEARNING_BASE_URL}/learning/courses/${courseId}/home`
+      window.location.href = `${config.LOGIN_URL}?next=${encodeURIComponent(redirection)}`;
       return;
     }
 
@@ -188,8 +188,8 @@ const CourseAbout = () => {
         if (Object.keys(data).length !== 0) { // Check if the object is not empty
           if(data.is_active){
             setEnrolled(true);
-            setCourseLink(data.course_target);
-            setShowCourseLink(true);
+            // setCourseLink(data.course_target);
+            // setShowCourseLink(true);
           } 
         } else {
           setEnrolled(false);
@@ -200,21 +200,19 @@ const CourseAbout = () => {
       });
     }
   }, [courseId, data]);
-  
-  
 
   useEffect(() => {
     if (courseId) {
       const Course =
         getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + courseId;
   
-      const Enrolment =
+      const Enrollment =
         getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + courseId;
   
       const update_data = async function () {
         const [firstResponse, secondResponse] = await Promise.all([
           axios.get(Course),
-          axios.get(Enrolment),
+          axios.get(Enrollment),
         ]);
         setData(firstResponse.data);
         setCourseDetails(secondResponse.data);
@@ -305,8 +303,6 @@ const CourseAbout = () => {
 
   const allData = data;
 
-  console.log(data);
-
   return (
     <main>
     <div className="container">
@@ -363,19 +359,19 @@ const CourseAbout = () => {
             </span>
             {
               enrollMessage ? (
-                <button className="button" disabled="true">
+                <button className="btn" disabled="true">
                   {enrollMessage}
                 </button>
               ) : (
                 !enrolled && (
-                  <button className="button" onClick={handleEnroll}>
+                  <button className="btn" onClick={handleEnroll}>
                     Enroll
                   </button>
                 )
               )
             }
             {enrolled && (
-              <a className="button" href={`${mfeLearning}/learning/course/${courseId}/home`}>
+              <a className="btn" href={`${mfeLearning}/learning/course/${courseId}/home`}>
                 View Course
               </a>
             )}
