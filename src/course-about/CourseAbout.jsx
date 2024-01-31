@@ -304,125 +304,119 @@ const CourseAbout = () => {
   const allData = data;
 
   return (
-    <main>
-    <div className="container">
-      <div className="white-continer-claim">
-        <div className="wrapper-continer wrapper">
-          <div>
-            <span>{data?.org}-{data?.number}</span>
-            <h2>{data?.name}</h2>
-          </div>
-          <div className="description" dangerouslySetInnerHTML={desc} />
+    <div className="course-about">
+      <div className="course-intro">
+        <div className="course-title">
+          <span className="course-id">{data?.org}-{data?.number}</span>
+          <h2 className="course-name">{data?.name}</h2>
         </div>
-        <div className="">
-          <div className="course-info-banner">
-            <span className="info-tab">
-              <div className="text-block">
-                <strong className="text-block-header"> Effort</strong>
-                <br />
-                <strong className="text-block-footer">{data?.effort} per week</strong>
-              </div>
-            </span>
-            <span className="info-tab">
-              <div className="text-block">
-                <strong className="text-block-header">{courseDetails?.pacing_type}</strong>
-                <br />
-                {
-                  courseDetails?.pacing_type === "Instructor Paced" ? 
-                  <strong className="text-block-footer">Learn together with instructor</strong> 
-                  : 
-                  <strong className="text-block-footer">Go at your own speed</strong>
-                }
-              </div>
-            </span>
-            <span>
-              {courseDetails?.course_modes[0].min_price == 0 ? (
-                <span className="info-tab">
-                  <div className="text-block">
-                    <strong className="text-block-header">Free!</strong>
-                    <br />
-                    <strong className="text-block-footer">100% free course</strong>
-                  </div>
-                </span>
-              ) : (
-                courseDetails?.course_modes[0].min_price +
-                courseDetails?.course_modes[0].currency
-              )}
-            </span>
-            <span className="info-tab">
-              <div className="text-block">
-                <strong className="text-block-header">Start: {date(data?.start)}</strong>
-                <br />
-                <strong className="text-block-footer">End: {date(data?.end)}</strong>
-              </div>
-            </span>
+        <div className="description" dangerouslySetInnerHTML={desc} />
+      </div>
+      <div className="course-info-banner">
+        <span className="info-tab">
+          <div className="text-block">
+            <strong className="text-block-header"> Effort</strong>
+            <br />
+            <strong className="text-block-footer">{data?.effort} per week</strong>
+          </div>
+        </span>
+        <span className="info-tab">
+          <div className="text-block">
+            <strong className="text-block-header">{courseDetails?.pacing_type}</strong>
+            <br />
             {
-              enrollMessage ? (
-                <button className="btn" disabled="true">
-                  {enrollMessage}
-                </button>
-              ) : (
-                !enrolled && (
-                  <button className="btn" onClick={handleEnroll}>
-                    Enroll
-                  </button>
-                )
-              )
+              courseDetails?.pacing_type === "Instructor Paced" ? 
+              <strong className="text-block-footer">Learn together with instructor</strong> 
+              : 
+              <strong className="text-block-footer">Go at your own speed</strong>
             }
-            {enrolled && (
-              <a className="btn" href={`${mfeLearning}/learning/course/${courseId}/home`}>
-                View Course
-              </a>
+          </div>
+        </span>
+        {/* <span className="course-details">
+          {courseDetails?.course_modes[0].min_price == 0 ? (
+            <span className="info-tab">
+              <div className="text-block">
+                <strong className="text-block-header">Free!</strong>
+                <br />
+                <strong className="text-block-footer">100% free course</strong>
+              </div>
+            </span>
+          ) : (
+            courseDetails?.course_modes[0].min_price +
+            courseDetails?.course_modes[0].currency
+          )}
+        </span> */}
+        <span className="info-tab">
+          <div className="text-block">
+            <strong className="text-block-header">Start: {date(data?.start)}</strong>
+            <br />
+            <strong className="text-block-footer">End: {date(data?.end)}</strong>
+          </div>
+        </span>
+        {
+          enrollMessage ? (
+            <button className="btn" disabled="true">
+              {enrollMessage}
+            </button>
+          ) : (
+            !enrolled && (
+              <button className="btn" onClick={handleEnroll}>
+                Enroll
+              </button>
+            )
+          )
+        }
+        {enrolled && (
+          <a className="btn" href={`${mfeLearning}/learning/course/${courseId}/home`}>
+            View Course
+          </a>
+        )}
+      </div>
+      <figure className="course-image-figure">
+        <img
+          className="course-image"
+          src={data?.media.image.large}
+          alt={data?.course_name}
+        />
+      </figure>
+      <div className="course-info-banner2">
+        <div className="tabs">
+          {tabItems.map(({ id, title, section_id }) => (
+            <TabItemComponent
+                key={title}
+                title={title}
+                onItemClicked={() => handleTabClick(id, section_id)}
+                isActive={active === id}
+            />
+          ))}
+          <div className="tabitem">
+            {enrollMessage ? (
+            <button id="enroll-button" className="tabitem" disabled="true">
+              {enrollMessage}
+            </button>
+            ) : (
+            <button onClick={handleEnroll} id="enroll-button" className="tabitem" disabled={enrolled}>
+            {enrolled ? 'You are already enrolled' : 'Enroll now'}
+            </button>
             )}
           </div>
-          <div>
-            <img
-              className="course-image"
-              src={data?.media.image.large}
-              alt={data?.course_name}
-            />
-          </div>
-          <div className="course-info-banner2">
-            <div className="tabs">
-              {tabItems.map(({ id, title, section_id }) => (
-                <TabItemComponent
-                    key={title}
-                    title={title}
-                    onItemClicked={() => handleTabClick(id, section_id)}
-                    isActive={active === id}
-                />
-              ))}
-              <div className="tabitem">
-                {enrollMessage ? (
-                <button id="enroll-button" className="tabitem" disabled="true">
-                  {enrollMessage}
-                </button>
-                ) : (
-                <button onClick={handleEnroll} id="enroll-button" className="tabitem" disabled={enrolled}>
-                {enrolled ? 'You are already enrolled' : 'Enroll now'}
-                </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="content wrapper-continer">
-            {tabItems.map(({ id, section_class }) => {
-              return active === id ? (
-                <div
-                  key={id}
-                  className={`about-course-tabs`}
-                  dangerouslySetInnerHTML={overview}
-                ></div>
-              ) : (
-                ""
-              );
-            })}
-          </div>
         </div>
       </div>
+
+      <div className="course-preview">
+        {tabItems.map(({ id, section_class }) => {
+          return active === id ? (
+            <div
+              key={id}
+              className={`about-course-tabs`}
+              dangerouslySetInnerHTML={overview}
+            ></div>
+          ) : (
+            ""
+          );
+        })}
       </div>
-    </main>
+    </div>
   );
 };
 
