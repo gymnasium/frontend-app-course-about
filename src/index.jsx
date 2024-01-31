@@ -15,7 +15,7 @@ import CourseAbout from './course-about/CourseAbout';
 
 import './index.scss';
 
-import GymSettings, { GymFooter, GymHeader } from './gym-frontend-components';
+import GymSettings, { GymFooter, GymHeader } from 'gym-frontend-components';
 const timestamp = Date.now();
 const settings = await GymSettings;
 const root = settings.urls.root; // should be same as marketing URL
@@ -34,7 +34,11 @@ subscribe(APP_READY, () => {
         <link rel="stylesheet" href={css} />
       </Helmet>
       <GymHeader secondaryNav="courses" />
-      <CourseAbout />
+      <main>
+        <div className="container">
+          <CourseAbout />
+        </div>
+      </main>
       <GymFooter />
     </AppProvider>,
     document.getElementById('root'),
