@@ -27,8 +27,6 @@
     "url": "https://github.com/gymnasium/frontend-app-course-about/issues"
   },
   "dependencies": {
-    "@edx/frontend-component-header": "github:gymnasium/frontend-component-header#gym.palm.4",
-    "@edx/frontend-component-footer": "github:gymnasium/frontend-component-footer#gym.palm.4",
     "@edx/frontend-platform": "4.6.0",
     "@edx/paragon": "20.46.3",
     "@fortawesome/fontawesome-svg-core": "6.4.0",
