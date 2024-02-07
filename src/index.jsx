@@ -21,7 +21,7 @@ import './index.scss';
 // const root = settings.urls.root; // should be same as marketing URL
 const config = getConfig();
 // const css = `${root}${settings.css.mfe}?${timestamp}`;
-const title = `Course About | ${config).SITE_NAME}`;
+const title = `Course About | ${config.SITE_NAME}`;
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
