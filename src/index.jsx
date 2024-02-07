@@ -15,13 +15,13 @@ import CourseAbout from './course-about/CourseAbout';
 
 import './index.scss';
 
-import GymSettings, { GymFooter, GymHeader } from './gym-frontend-components/';
-const timestamp = Date.now();
-const settings = await GymSettings;
-const root = settings.urls.root; // should be same as marketing URL
+// import GymSettings, { GymFooter, GymHeader } from 'gym-frontend-components';
+// const timestamp = Date.now();
+// const settings = await GymSettings;
+// const root = settings.urls.root; // should be same as marketing URL
 const config = getConfig();
-const css = `${root}${settings.css.mfe}?${timestamp}`;
-const title = `Course About | ${getConfig().SITE_NAME}`;
+// const css = `${root}${settings.css.mfe}?${timestamp}`;
+const title = `Course About | ${config).SITE_NAME}`;
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
@@ -30,16 +30,16 @@ subscribe(APP_READY, () => {
         <title>{title}</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
-        <link rel="stylesheet" href={css} />
+        <link rel="shortcut icon" href={config.FAVICON_URL} type="image/x-icon" />
+        {/* <link rel="stylesheet" href={css} /> */}
       </Helmet>
-      <GymHeader secondaryNav="courses" />
+      {/* <GymHeader secondaryNav="courses" /> */}
       <main>
         <div className="container">
           <CourseAbout />
         </div>
       </main>
-      <GymFooter />
+      {/* <GymFooter /> */}
     </AppProvider>,
     document.getElementById('root'),
   );
