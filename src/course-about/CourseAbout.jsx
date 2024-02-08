@@ -68,9 +68,9 @@ const CourseAbout = () => {
   const [enrollMessage, setEnrollMessage] = useState("");
 
   // TODO: use .env files for these
-  const url = "http://local.overhang.io:8000"
-  const mfeLearning = "http://apps.local.overhang.io:2000"
-  const appsurl = "http://apps.local.overhang.io:3000"
+  const url = "http://local.edly.io:8000"
+  const mfeLearning = "http://apps.local.edly.io:2000"
+  const appsurl = "http://apps.local.edly.io:3000"
 
   const { authenticatedUser } = useContext(AppContext);
 
