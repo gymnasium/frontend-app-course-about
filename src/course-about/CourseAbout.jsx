@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { forwardRef, useState, useEffect, useContext, useRef } from "react";
 import { AppContext } from '@edx/frontend-platform/react';
 
 import dompurify from 'dompurify';
@@ -9,54 +9,11 @@ import TabItemComponent from "./TabItem";
 import { getConfig } from "@edx/frontend-platform";
 import { useParams } from "react-router";
 
-const config = getConfig();
-
-import TabsComponent from "./Tabs";
-
-const tabItems = [
-  {
-    id: 1,
-    title: "Preview",
-    section_class: "course-preview",
-    section_id: "course-preview",
-  },
-  {
-    id: 2,
-    title: "About",
-    section_class: "course-about",
-    section_id: "course-about",
-  },
-  {
-    id: 3,
-    title: "Outline",
-    section_class: "course-outline",
-    section_id: "course-outline",
-  },
-  {
-    id: 4,
-    title: "Prerequisites",
-    section_class: "course-prerequisites",
-    section_id: "course-prerequisites",
-  },
-  {
-    id: 5,
-    title: "Software",
-    section_class: "course-software",
-    section_id: "course-software",
-  },
-  {
-    id: 6,
-    title: "Audience",
-    section_class: "course-audience",
-    section_id: "course-audience",
-  },
-  {
-    id: 7,
-    title: "Instructor",
-    section_class: "course-instructor",
-    section_id: "course-instructor",
-  },
-];
+const ROOT_URL = getConfig().MARKETING_SITE_BASE_URL;
+const LMS_BASE_URL = getConfig().LMS_BASE_URL;
+const LEARNING_BASE_URL = getConfig().LEARNING_BASE_URL;
+const LOGIN_URL = getConfig().LOGIN_URL;
+const STUDIO_BASE_URL = getConfig().STUDIO_BASE_URL;
 
 const CourseAbout = () => {
   const params = useParams();
@@ -66,11 +23,6 @@ const CourseAbout = () => {
   const [courseId, setCourseId] = useState();
   const [enrolled, setEnrolled] = useState(false);
   const [enrollMessage, setEnrollMessage] = useState("");
-
-  // TODO: use .env files for these
-  const url = "http://local.edly.io:8000"
-  const mfeLearning = "http://apps.local.edly.io:2000"
-  const appsurl = "http://apps.local.edly.io:3000"
 
   const { authenticatedUser } = useContext(AppContext);
 
@@ -97,6 +49,7 @@ const CourseAbout = () => {
     return cookieValue;
   }
 
+  // Tab Navigation Clicks
   const handleTabClick = (id, section_id) => {
     setActive(id);
   
@@ -110,8 +63,8 @@ const CourseAbout = () => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      let redirection = `${config.LEARNING_BASE_URL}/learning/courses/${courseId}/home`
-      window.location.href = `${config.LOGIN_URL}?next=${encodeURIComponent(redirection)}`;
+      let redirection = `${LEARNING_BASE_URL}/learning/courses/${courseId}/home`
+      window.location.href = `${LOGIN_URL}?next=${encodeURIComponent(redirection)}`;
       return;
     }
 
@@ -123,7 +76,7 @@ const CourseAbout = () => {
     const csrftoken = getCookie('csrftoken');
 
     try {
-      const response = await fetch(`${url}/change_enrollment`, {
+      const response = await fetch(`${LMS_BASE_URL}/change_enrollment`, {
         method: 'POST',
         headers: {
           'Accept': 'text/plain, */*; q=0.01',
@@ -145,7 +98,7 @@ const CourseAbout = () => {
   useEffect(() => {
     if (courseId) {
       const encodedCourseId = encodeURIComponent(courseId);
-      fetch(`${url}/api/enrollment/v1/enrollment/${encodedCourseId}`, {
+      fetch(`${LMS_BASE_URL}/api/enrollment/v1/enrollment/${encodedCourseId}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -159,7 +112,7 @@ const CourseAbout = () => {
           setEnrolled(false);
           
           // Make another API request to check for enrollment closure or possibility
-          fetch(`${url}/api/course_home/v1/outline/${encodedCourseId}`, {
+          fetch(`${LMS_BASE_URL}/api/course_home/v1/outline/${encodedCourseId}`, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -203,11 +156,8 @@ const CourseAbout = () => {
 
   useEffect(() => {
     if (courseId) {
-      const Course =
-        getConfig().LMS_BASE_URL + "/api/courses/v1/courses/" + courseId;
-  
-      const Enrollment =
-        getConfig().LMS_BASE_URL + "/api/enrollment/v1/course/" + courseId;
+      const Course = `${LMS_BASE_URL}/api/courses/v1/courses/${courseId}`;
+      const Enrollment = `${LMS_BASE_URL}/api/enrollment/v1/course/${courseId}`;
   
       const update_data = async function () {
         const [firstResponse, secondResponse] = await Promise.all([
@@ -230,89 +180,65 @@ const CourseAbout = () => {
     return unformatData.toLocaleDateString("en-US", options);
   };
 
-  const toggleButtons = document.querySelectorAll('.toggle-button');
+  console.log(data?.media);
+  ///static/daveporter.jpg
+  // http://local.edly.io:8000/asset-v1:GYM+102+0+type@asset+block@daveporter.jpg
 
-  toggleButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const answer = button.parentElement.nextElementSibling;
-      answer.classList.toggle('show-answer');
-      button.textContent = answer.classList.contains('show-answer') ? '-' : '+';
-    });
-  });
-
-  //syllabus
-
-  const sectionButtons = document.querySelectorAll('.section-button');
-  const sections = document.querySelectorAll('.section');
-  
-  sectionButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Remove active class from all sections
-      sections.forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      // Add active class to corresponding section
-      const sectionId = button.dataset.section;
-      const section = document.getElementById(sectionId);
-      section.classList.add('active');
-
-      // Remove active class from all buttons
-      sectionButtons.forEach(btn => btn.classList.remove('active'));
-
-      // Add active class to clicked button
-      button.classList.add('active');
-
-    });
-  });
-    
-
-  //customers section
-
-  let currentIndex = 0;
-  const cards = document.querySelectorAll(".card");
-  const numCards = cards.length;
-
-  let prevbutton = document.getElementById("prev")
-  if(prevbutton){
-      prevbutton.addEventListener("click", () => {
-      cards[currentIndex].style.display = "none";
-      currentIndex--;
-      if (currentIndex < 0) {
-          currentIndex = numCards - 1;
-      }
-      cards[currentIndex].style.display = "block";
-    });
-  }
-
-  let nextbutton = document.getElementById("next")
-  if(nextbutton){
-    nextbutton.addEventListener("click", () => {
-      cards[currentIndex].style.display = "none";
-      currentIndex++;
-      if (currentIndex >= numCards) {
-          currentIndex = 0;
-      }
-      cards[currentIndex].style.display = "block";
-    });
-  }
-
-  const desc = { __html: dompurify.sanitize(data?.short_description) };
-
+  const instructor_img = data?.short_description;
+  const short_desc = { __html: dompurify.sanitize(data?.short_description) };
   const overview = { __html: dompurify.sanitize(data?.overview) };
+  const overviewRef = useRef(null);
+  const overviewSections = overviewRef?.current?.querySelectorAll('[id]');
+  const overviewSectionsArray = overviewSections && Array.from(overviewSections);
 
-  const allData = data;
+  const CourseOverview = forwardRef((props, ref) => {
+    return <div
+          {...props} ref={ref}
+          id={`course-overview`}
+          className={`course-overview`}
+          dangerouslySetInnerHTML={overview}
+        ></div>
+  });
 
   return (
     <div className="course-about">
-      <div className="course-intro">
+      <header id="course-header" className="course-header">
+        <figure className="course-image-figure">
+          <img
+            className="course-image"
+            src={data?.media.image.large}
+            alt={data?.course_name}
+          />
+        </figure>
         <div className="course-title">
           <span className="course-id">{data?.org}-{data?.number}</span>
-          <h2 className="course-name">{data?.name}</h2>
+          <h1 className="course-name">{data?.name}</h1>
         </div>
-        <div className="description" dangerouslySetInnerHTML={desc} />
+        
+      </header>
+      <div className="course-cta">
+        {
+          enrollMessage ? (
+            <button className="btn" disabled="true">
+              {enrollMessage}
+            </button>
+          ) : (
+            !enrolled && (
+              <button className="btn" onClick={handleEnroll}>
+                Enroll
+              </button>
+            )
+          )
+        }
+        {enrolled && (
+          <a className="btn" href={`${LEARNING_BASE_URL}/learning/course/${courseId}/home`}>
+            View Course
+          </a>
+        )}
       </div>
-      <div className="course-info-banner">
+
+      <div className="unused hide">
+        <div className="description" dangerouslySetInnerHTML={short_desc} />
         <span className="info-tab">
           <div className="text-block">
             <strong className="text-block-header"> Effort</strong>
@@ -333,7 +259,7 @@ const CourseAbout = () => {
           </div>
         </span>
         {/* <span className="course-details">
-          {courseDetails?.course_modes[0].min_price == 0 ? (
+          {courseDetails?.course_modes[0]?.min_price === 0 ? (
             <span className="info-tab">
               <div className="text-block">
                 <strong className="text-block-header">Free!</strong>
@@ -342,53 +268,35 @@ const CourseAbout = () => {
               </div>
             </span>
           ) : (
-            courseDetails?.course_modes[0].min_price +
-            courseDetails?.course_modes[0].currency
+            courseDetails?.course_modes[0]?.min_price +
+            courseDetails?.course_modes[0]?.currency
           )}
         </span> */}
         <span className="info-tab">
           <div className="text-block">
-            <strong className="text-block-header">Start: {date(data?.start)}</strong>
+            <strong className="text-block-header">Start Date: {date(data?.start)}</strong>
             <br />
-            <strong className="text-block-footer">End: {date(data?.end)}</strong>
+            <strong className="text-block-footer">End Date: {date(data?.end)}</strong>
           </div>
         </span>
-        {
-          enrollMessage ? (
-            <button className="btn" disabled="true">
-              {enrollMessage}
-            </button>
-          ) : (
-            !enrolled && (
-              <button className="btn" onClick={handleEnroll}>
-                Enroll
-              </button>
-            )
-          )
-        }
-        {enrolled && (
-          <a className="btn" href={`${mfeLearning}/learning/course/${courseId}/home`}>
-            View Course
-          </a>
-        )}
       </div>
-      <figure className="course-image-figure">
-        <img
-          className="course-image"
-          src={data?.media.image.large}
-          alt={data?.course_name}
-        />
-      </figure>
+      
       <div className="course-info-banner2">
         <div className="tabs">
-          {tabItems.map(({ id, title, section_id }) => (
-            <TabItemComponent
+          {overviewSections && overviewSectionsArray.map(({id}, index) => {
+            const section_id = id;
+            const title = id.replaceAll('course-', '');
+
+            return (
+              <TabItemComponent
                 key={title}
                 title={title}
-                onItemClicked={() => handleTabClick(id, section_id)}
-                isActive={active === id}
-            />
-          ))}
+                onItemClicked={() => handleTabClick(index, section_id)}
+                isActive={active === index}
+              />
+            )
+            })}
+
           <div className="tabitem">
             {enrollMessage ? (
             <button id="enroll-button" className="tabitem" disabled="true">
@@ -402,20 +310,9 @@ const CourseAbout = () => {
           </div>
         </div>
       </div>
+    
+      <CourseOverview ref={overviewRef} />
 
-      <div className="course-preview">
-        {tabItems.map(({ id, section_class }) => {
-          return active === id ? (
-            <div
-              key={id}
-              className={`about-course-tabs`}
-              dangerouslySetInnerHTML={overview}
-            ></div>
-          ) : (
-            ""
-          );
-        })}
-      </div>
     </div>
   );
 };
