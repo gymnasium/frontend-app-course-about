@@ -2,6 +2,8 @@ import arMessages from './messages/ar.json';
 import caMessages from './messages/ca.json';
 // no need to import en messages-- they are in the defaultMessage field
 import es419Messages from './messages/es_419.json';
+import faMessages from './messages/fa.json';
+import faIrMessages from './messages/fa_ir.json';
 import frMessages from './messages/fr.json';
 import zhcnMessages from './messages/zh_CN.json';
 import heMessages from './messages/he.json';
@@ -16,6 +18,8 @@ import ukMessages from './messages/uk.json';
 const messages = {
   ar: arMessages,
   'es-419': es419Messages,
+  fa: faMessages,
+  'fa-ir': faIrMessages,
   fr: frMessages,
   'zh-cn': zhcnMessages,
   ca: caMessages,
