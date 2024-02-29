@@ -63,7 +63,7 @@ const CourseAbout = () => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      let redirection = `${LEARNING_BASE_URL}/learning/courses/${courseId}/home`
+      let redirection = `${LEARNING_BASE_URL}/learning/course/${courseId}/home`
       window.location.href = `${LOGIN_URL}?next=${encodeURIComponent(redirection)}`;
       return;
     }
