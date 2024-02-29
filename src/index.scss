@@ -1,1 +1,12 @@
 @use 'scss/example';
+
+// TODO: move to eleventy
+.course-about {
+  main {
+    margin-top: 0;
+  }
+}
+
+.course-header, .course-overview {
+  padding: 2rem 0;
+}

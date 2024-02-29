@@ -121,7 +121,7 @@ const CourseAbout = () => {
           })
           .then(res => {
             if(res.redirected) {
-              setEnrollMessage("You can't enroll");
+              setEnrollMessage("Enrollment Closed");
               return {};
             } else {
               return res.json();
@@ -130,7 +130,7 @@ const CourseAbout = () => {
           .then(outlineData => {
             // If "can_enroll" is false, set enroll message
             if (outlineData.enroll_alert && !outlineData.enroll_alert.can_enroll) {
-              setEnrollMessage("You can't enroll");
+              setEnrollMessage("Enrollment Closed");
             }
           })
         }
@@ -139,7 +139,7 @@ const CourseAbout = () => {
         const data = JSON.parse(text);
     
         if (Object.keys(data).length !== 0) { // Check if the object is not empty
-          if(data.is_active){
+          if (data.is_active) {
             setEnrolled(true);
             // setCourseLink(data.course_target);
             // setShowCourseLink(true);
@@ -180,29 +180,36 @@ const CourseAbout = () => {
     return unformatData.toLocaleDateString("en-US", options);
   };
 
-  console.log(data?.media);
+  // debug/logging
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
+
+  
   ///static/daveporter.jpg
   // http://local.edly.io:8000/asset-v1:GYM+102+0+type@asset+block@daveporter.jpg
 
   const instructor_img = data?.short_description;
   const short_desc = { __html: dompurify.sanitize(data?.short_description) };
-  const overview = { __html: dompurify.sanitize(data?.overview) };
+  const overview = { __html: data?.overview };
   const overviewRef = useRef(null);
   const overviewSections = overviewRef?.current?.querySelectorAll('[id]');
   const overviewSectionsArray = overviewSections && Array.from(overviewSections);
 
   const CourseOverview = forwardRef((props, ref) => {
     return <div
-          {...props} ref={ref}
-          id={`course-overview`}
-          className={`course-overview`}
-          dangerouslySetInnerHTML={overview}
-        ></div>
+        {...props} ref={ref}
+        id={`course-overview`}
+        className={`course-overview`}
+        dangerouslySetInnerHTML={overview}
+      ></div>
   });
 
   return (
     <div className="course-about">
-      <header id="course-header" className="course-header">
+      <header id="course-header" className="course-header layout-1fr-2fr bg-mono-300 full-bleed">
         <figure className="course-image-figure">
           <img
             className="course-image"
@@ -211,31 +218,33 @@ const CourseAbout = () => {
           />
         </figure>
         <div className="course-title">
-          <span className="course-id">{data?.org}-{data?.number}</span>
+        <span className="course-id hide">{data?.org}-{data?.number}</span>
           <h1 className="course-name">{data?.name}</h1>
+          <p>{ data?.number < 100 ? 'Gym Short' : 'Full Course'  }</p>
+          <div className="course-cta">
+            {
+              enrollMessage ? (
+                <button className="btn" disabled="true">
+                  {enrollMessage}
+                </button>
+              ) : (
+                !enrolled && (
+                  <button className="btn" onClick={handleEnroll}>
+                    Get Started
+                  </button>
+                )
+              )
+            }
+            {enrolled && (
+              <a className="btn" href={`${LEARNING_BASE_URL}/learning/course/${courseId}/home`}>
+                Go to Class
+              </a>
+            )}
+          </div>
         </div>
         
       </header>
-      <div className="course-cta">
-        {
-          enrollMessage ? (
-            <button className="btn" disabled="true">
-              {enrollMessage}
-            </button>
-          ) : (
-            !enrolled && (
-              <button className="btn" onClick={handleEnroll}>
-                Enroll
-              </button>
-            )
-          )
-        }
-        {enrolled && (
-          <a className="btn" href={`${LEARNING_BASE_URL}/learning/course/${courseId}/home`}>
-            View Course
-          </a>
-        )}
-      </div>
+      
 
       <div className="unused hide">
         <div className="description" dangerouslySetInnerHTML={short_desc} />
@@ -281,33 +290,31 @@ const CourseAbout = () => {
         </span>
       </div>
       
-      <div className="course-info-banner2">
-        <div className="tabs">
-          {overviewSections && overviewSectionsArray.map(({id}, index) => {
-            const section_id = id;
-            const title = id.replaceAll('course-', '');
+      <div className="tabs-nav hide">
+        {overviewSections && overviewSectionsArray.map(({id}, index) => {
+          const section_id = id;
+          const title = id.replaceAll('course-', '');
 
-            return (
-              <TabItemComponent
-                key={title}
-                title={title}
-                onItemClicked={() => handleTabClick(index, section_id)}
-                isActive={active === index}
-              />
-            )
-            })}
+          return (
+            <TabItemComponent
+              key={title}
+              title={title}
+              onItemClicked={() => handleTabClick(index, section_id)}
+              isActive={active === index}
+            />
+          )
+          })}
 
-          <div className="tabitem">
-            {enrollMessage ? (
-            <button id="enroll-button" className="tabitem" disabled="true">
-              {enrollMessage}
-            </button>
-            ) : (
-            <button onClick={handleEnroll} id="enroll-button" className="tabitem" disabled={enrolled}>
-            {enrolled ? 'You are already enrolled' : 'Enroll now'}
-            </button>
-            )}
-          </div>
+        <div className="tabitem">
+          {enrollMessage ? (
+          <button id="enroll-button" className="tabitem" disabled="true">
+            {enrollMessage}
+          </button>
+          ) : (
+          <button onClick={handleEnroll} id="enroll-button" className="tabitem" disabled={enrolled}>
+          {enrolled ? 'You are already enrolled' : 'Enroll now'}
+          </button>
+          )}
         </div>
       </div>
     

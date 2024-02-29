@@ -11,6 +11,13 @@ import {
 
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Redirect,
+  Route,
+  useParams
+} from "react-router-dom";
 import { Helmet } from 'react-helmet';
 
 import appMessages from './i18n';
@@ -41,7 +48,16 @@ subscribe(APP_READY, () => {
       <GymHeader secondaryNav="courses" />
       <main>
         <div className="container">
-          <CourseAbout />
+          <Router basename="/courses">
+            <Switch>
+              <Route path="/:courseId/about/">
+                <CourseAbout />
+              </Route>
+            </Switch>
+            {/* <Route path="*">
+              <div>none found</div>
+            </Route> */}
+          </Router>
         </div>
       </main>
       <GymFooter />
