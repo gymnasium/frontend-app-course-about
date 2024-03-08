@@ -48,16 +48,7 @@ subscribe(APP_READY, () => {
       <GymHeader secondaryNav="courses" />
       <main>
         <div className="container">
-          <Router basename="/courses">
-            <Switch>
-              <Route path="/:courseId/about/">
-                <CourseAbout />
-              </Route>
-            </Switch>
-            {/* <Route path="*">
-              <div>none found</div>
-            </Route> */}
-          </Router>
+          <CourseAbout GymSettings={GymSettings} />
         </div>
       </main>
       <GymFooter />

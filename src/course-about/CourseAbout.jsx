@@ -15,7 +15,7 @@ const LEARNING_BASE_URL = getConfig().LEARNING_BASE_URL;
 const LOGIN_URL = getConfig().LOGIN_URL;
 const STUDIO_BASE_URL = getConfig().STUDIO_BASE_URL;
 
-const CourseAbout = () => {
+const CourseAbout = ({ GymSettings }) => {
   const params = useParams();
   const [data, setData] = useState(null);
   const [courseDetails, setCourseDetails] = useState(null);
@@ -26,13 +26,15 @@ const CourseAbout = () => {
 
   const { authenticatedUser } = useContext(AppContext);
 
+  // Use REGEX to get course id? Seems like there should be a different way of doing this
   useEffect(() => {
     const url = window.location.pathname;
-    const regex = /courses\/(course-v1:[^/]+)\/about/;
+    const regex = /(course-v1:[^/]+)/;
     const match = url.match(regex);
     setCourseId(match[1]);
   }, []);
 
+  // Read Cookie
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -49,6 +51,15 @@ const CourseAbout = () => {
     return cookieValue;
   }
 
+  let date = (str) => {
+    let unformatData = new Date(str);
+    const options = {
+      day: "numeric",
+      month: "short",
+    };
+    return unformatData.toLocaleDateString("en-US", options);
+  };
+
   // Tab Navigation Clicks
   const handleTabClick = (id, section_id) => {
     setActive(id);
@@ -59,6 +70,7 @@ const CourseAbout = () => {
     }
   }
 
+  // Enrollment
   const handleEnroll = async () => {
 
     if (!authenticatedUser) {
@@ -68,7 +80,7 @@ const CourseAbout = () => {
       return;
     }
 
-    const body = new URLSearchParams({
+    const responseBody = new URLSearchParams({
       'course_id': courseId,
       'enrollment_action': 'enroll'
     });
@@ -83,7 +95,7 @@ const CourseAbout = () => {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           'x-csrftoken': csrftoken
         },
-        body: body,
+        body: responseBody,
         credentials: 'include'
       });
       if (response.ok) { 
@@ -171,27 +183,204 @@ const CourseAbout = () => {
     }
   }, [courseId]);
 
-  let date = (str) => {
-    let unformatData = new Date(str);
-    const options = {
-      day: "numeric",
-      month: "short",
+  // Flag to toggle between LMS data and data sourced from static site JSON
+  const CUSTOM_OVERVIEW = true;
+
+  const gymCourseId = data?.org + '-' + data?.number;
+  const GymCourseData = GymSettings?.courses[gymCourseId];
+
+  const courseType = data?.number < 100 ? 'Gym Short' : (data?.number >= 700 ? 'Workshop' : 'Full Course');
+
+  const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? null) : data?.name;
+
+  const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? GymSettings?.urls.root + GymCourseData?.img : null) : data?.media?.image?.large;
+
+  const courseImgAlt = `Image for ${courseTitle}`;
+
+  const CTA = () => {
+    return (
+      <div className="course-cta">
+        {
+          enrollMessage ? (
+            <button className="btn" disabled="true">
+              {enrollMessage}
+            </button>
+          ) : (
+            !enrolled && (
+              <button className="btn" onClick={handleEnroll}>
+                Get Started
+              </button>
+            )
+          )
+        }
+        {enrolled && (
+          <a className="btn" href={`${LEARNING_BASE_URL}/learning/course/${courseId}/home`}>
+            Go to Class
+          </a>
+        )}
+      </div>
+  )}
+
+  const CourseHeader = () => {
+    // TODO: this is a fancy approach that could be simplified by using a custom bg-color class name or similar.
+    const figureStyle = {
+      borderImageSource: 'url(' + courseImg + ')',
     };
-    return unformatData.toLocaleDateString("en-US", options);
-  };
+
+    return (
+      <header className="course-header layout-1fr-2fr bg-mono-300 full-bleed">
+        {courseImg && (
+          <figure style={figureStyle}>
+            <img src={courseImg} alt={courseImgAlt} />
+          </figure>
+        )}
+        <div className="course-title">
+          {courseTitle && (
+            <h1>{courseTitle}</h1>
+          )}
+          <p>{courseType}</p>
+          <CTA />
+        </div>
+      </header>
+    )
+  }
+
+  const GymOverview = () => {
+
+    const courseDate = GymCourseData?.date ?? null;
+    const courseLive = GymCourseData?.live ?? false;
+    const courseTopic = GymCourseData?.topic ?? null;
+
+    const instructorSlug = GymCourseData?.instructor ?? null;
+    const bio = GymSettings?.bios[instructorSlug] ?? null;
+    const instructorBlurb = {__html: bio?.extended_description ? bio?.extended_description : bio?.description};
+    const instructorImg = `${ROOT_URL}${bio?.img}`;
+    const headings = GymSettings?.messages?.mfe?.course_about?.headings;
+    const intro = { __html: GymCourseData?.intro };
+    const about = { __html: GymCourseData?.about };
+    const outline = GymCourseData?.outline ??  null;
+    const requirements = GymCourseData?.requirements ?? null;
+    const prerequisites = GymCourseData?.prerequisites ?? null;
+    const audience = GymCourseData?.audience ?? null;
+    const video_src = GymCourseData?.preview_video_src ?? null;
+
+    const outlineItems = outline?.map((item, index) => {
+      const desc = {__html: item?.description};
+      return <li key={`item-${index}`}>
+        <h3>{item?.label}</h3>
+        <p dangerouslySetInnerHTML={desc}/>
+      </li>
+    });
+
+    function renderSectionData(arr) {
+      if (arr) {
+        if (typeof arr === 'string') {
+          const desc = {__html: arr };
+          return <div dangerouslySetInnerHTML={desc} />;
+
+        } else if (typeof arr === 'object') {
+
+          if (arr.length > 1) {
+            const listItems = arr.map((item, index) => {
+              const desc = { __html: item.label };
+              return <li key={`item-${index}`} dangerouslySetInnerHTML={desc} />;
+            });
+            return <ul>{listItems}</ul>;
+          } else {
+            const desc = { __html: arr[0].label };
+            return <p dangerouslySetInnerHTML={desc} />;
+          }
+        }
+        
+      } else {
+        return false;
+      }
+    }
+
+    function PreviewVideo() {
+      return (
+        <div className="iframe-video-holder ratio-16-9">
+          <iframe width="100%" height="425" frameBorder="0" src={video_src} allow="encrypted-media" allowFullScreen title={`${courseTitle} Preview`} />
+        </div>
+      );
+    }
+
+    return (
+    <>
+      <CourseHeader/>
+
+      {intro && (
+        <section className="course-intro">
+          <p dangerouslySetInnerHTML={intro}/>
+        </section>
+      )}
+
+      {video_src && (
+        <section className="course-preview">
+          <h2>{headings.preview}</h2>
+          <PreviewVideo />
+        </section>
+      )}
+
+      {about && (
+        <section className="course-about">
+          <h2>{courseTitle}</h2>
+          <div dangerouslySetInnerHTML={about} />
+        </section>
+      )}
+
+      {outlineItems && (
+      <section className="course-outline">
+        <h2>{headings.outline}</h2>
+        <ul>{outlineItems}</ul>
+      </section>
+      )}
+
+      {prerequisites && (
+      <section className="course-prerequisites">
+        <h2>{headings.prerequisites}</h2>
+        {renderSectionData(prerequisites)}
+      </section>
+      )}
+
+      {requirements && (
+      <section className="course-requirements">
+        <h2>{headings.requirements}</h2>
+        {renderSectionData(requirements)}
+      </section>
+      )}
+
+      {audience && (
+      <section className="course-audience">
+        <h2>{headings?.audience}</h2>
+        {renderSectionData(audience)}
+      </section>
+      )}
+
+      {bio && (
+      <section className="course-bio">
+        <h2>{headings?.instructor}</h2>
+        <img src={instructorImg} alt={`Image of ${bio?.name}`} />
+        <h3>{bio?.name}</h3>
+        <div dangerouslySetInnerHTML={instructorBlurb} />
+      </section>
+      )}
+
+    </>
+  )};
 
   // debug/logging
   useEffect(() => {
     if (data) {
-      console.log(data);
+      console.log(`data: `,data);
     }
-  }, [data]);
-
   
-  ///static/daveporter.jpg
-  // http://local.edly.io:8000/asset-v1:GYM+102+0+type@asset+block@daveporter.jpg
+    if (GymCourseData) {
+      console.log(`GymCourseData: `, GymCourseData);
+    }
+  }, [data, GymCourseData]);
 
-  const instructor_img = data?.short_description;
+
   const short_desc = { __html: dompurify.sanitize(data?.short_description) };
   const overview = { __html: data?.overview };
   const overviewRef = useRef(null);
@@ -208,42 +397,11 @@ const CourseAbout = () => {
   });
 
   return (
+    
     <div className="course-about">
-      <header id="course-header" className="course-header layout-1fr-2fr bg-mono-300 full-bleed">
-        <figure className="course-image-figure">
-          <img
-            className="course-image"
-            src={data?.media.image.large}
-            alt={data?.course_name}
-          />
-        </figure>
-        <div className="course-title">
-        <span className="course-id hide">{data?.org}-{data?.number}</span>
-          <h1 className="course-name">{data?.name}</h1>
-          <p>{ data?.number < 100 ? 'Gym Short' : 'Full Course'  }</p>
-          <div className="course-cta">
-            {
-              enrollMessage ? (
-                <button className="btn" disabled="true">
-                  {enrollMessage}
-                </button>
-              ) : (
-                !enrolled && (
-                  <button className="btn" onClick={handleEnroll}>
-                    Get Started
-                  </button>
-                )
-              )
-            }
-            {enrolled && (
-              <a className="btn" href={`${LEARNING_BASE_URL}/learning/course/${courseId}/home`}>
-                Go to Class
-              </a>
-            )}
-          </div>
-        </div>
-        
-      </header>
+      <GymOverview />
+
+      <CourseHeader />
       
 
       <div className="unused hide">
@@ -267,7 +425,8 @@ const CourseAbout = () => {
             }
           </div>
         </span>
-        {/* <span className="course-details">
+        {/* Course Pricing */}
+        {courseDetails?.course_modes && <span className="course-details">
           {courseDetails?.course_modes[0]?.min_price === 0 ? (
             <span className="info-tab">
               <div className="text-block">
@@ -280,7 +439,8 @@ const CourseAbout = () => {
             courseDetails?.course_modes[0]?.min_price +
             courseDetails?.course_modes[0]?.currency
           )}
-        </span> */}
+        </span>}
+        {/* Course Dates */}
         <span className="info-tab">
           <div className="text-block">
             <strong className="text-block-header">Start Date: {date(data?.start)}</strong>
@@ -323,5 +483,6 @@ const CourseAbout = () => {
     </div>
   );
 };
+
 
 export default CourseAbout;
