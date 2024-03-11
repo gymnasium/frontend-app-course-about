@@ -230,7 +230,7 @@ const CourseAbout = ({ GymSettings }) => {
     };
 
     return (
-      <header className="course-header layout-1fr-2fr bg-mono-300 full-bleed">
+      <header className="course-header grid-col-1-2 layout-1fr-2fr bg-mono-300 full-bleed">
         {courseImg && (
           <figure style={figureStyle}>
             <img src={courseImg} alt={courseImgAlt} />
@@ -312,63 +312,66 @@ const CourseAbout = ({ GymSettings }) => {
 
     return (
     <>
+      <div>
+        {intro && (
+          <section className="course-intro">
+            <p dangerouslySetInnerHTML={intro}/>
+          </section>
+        )}
 
-      {intro && (
-        <section className="course-intro">
-          <p dangerouslySetInnerHTML={intro}/>
+        {video_src && (
+          <section className="course-preview">
+            <h2>{headings.preview}</h2>
+            <PreviewVideo />
+          </section>
+        )}
+
+        {about && (
+          <section className="course-about">
+            <h2>{courseTitle}</h2>
+            <div dangerouslySetInnerHTML={about} />
+          </section>
+        )}
+
+        {outlineItems && (
+        <section className="course-outline">
+          <h2>{headings.outline}</h2>
+          <ul>{outlineItems}</ul>
         </section>
-      )}
+        )}
 
-      {video_src && (
-        <section className="course-preview">
-          <h2>{headings.preview}</h2>
-          <PreviewVideo />
+        {prerequisites && (
+        <section className="course-prerequisites">
+          <h2>{headings.prerequisites}</h2>
+          {renderSectionData(prerequisites)}
         </section>
-      )}
+        )}
 
-      {about && (
-        <section className="course-about">
-          <h2>{courseTitle}</h2>
-          <div dangerouslySetInnerHTML={about} />
+        {requirements && (
+        <section className="course-requirements">
+          <h2>{headings.requirements}</h2>
+          {renderSectionData(requirements)}
         </section>
-      )}
+        )}
+      </div>
 
-      {outlineItems && (
-      <section className="course-outline">
-        <h2>{headings.outline}</h2>
-        <ul>{outlineItems}</ul>
-      </section>
-      )}
+      <aside>
+        {audience && (
+        <section className="course-audience">
+          <h2>{headings?.audience}</h2>
+          {renderSectionData(audience)}
+        </section>
+        )}
 
-      {prerequisites && (
-      <section className="course-prerequisites">
-        <h2>{headings.prerequisites}</h2>
-        {renderSectionData(prerequisites)}
-      </section>
-      )}
-
-      {requirements && (
-      <section className="course-requirements">
-        <h2>{headings.requirements}</h2>
-        {renderSectionData(requirements)}
-      </section>
-      )}
-
-      {audience && (
-      <section className="course-audience">
-        <h2>{headings?.audience}</h2>
-        {renderSectionData(audience)}
-      </section>
-      )}
-
-      {bio && (
-      <section className="course-bio">
-        <h2>{headings?.instructor}</h2>
-        <img src={instructorImg} alt={`Image of ${bio?.name}`} />
-        <h3>{bio?.name}</h3>
-        <div dangerouslySetInnerHTML={instructorBlurb} />
-      </section>
-      )}
+        {bio && (
+        <section className="course-bio">
+          <h2>{headings?.instructor}</h2>
+          <img src={instructorImg} alt={`Image of ${bio?.name}`} />
+          <h3>{bio?.name}</h3>
+          <div dangerouslySetInnerHTML={instructorBlurb} />
+        </section>
+        )}
+      </aside>
 
     </>
     )
@@ -416,7 +419,7 @@ const CourseAbout = ({ GymSettings }) => {
         <div className="course-pacing">
           <p><strong>{courseDetails?.pacing_type}</strong>: 
           {
-            courseDetails?.pacing_type === "Instructor Paced" ? <span>Learn together with instructor.</span> : <span>Go at your own speed</span>
+            courseDetails?.pacing_type === "Instructor Paced" ? (<span>Learn together with instructor.</span>) : (<span>Go at your own speed.</span>)
           }
           </p>
         </div>
@@ -482,12 +485,12 @@ const CourseAbout = ({ GymSettings }) => {
     <Helmet>
       <title>{`${courseTitle} | ${SITE_NAME}`}</title>
     </Helmet>
-    <div className="course-about">
+    <article className="course-about">
       <CourseHeader />
 
       <Overview ref={overviewRef} />
 
-    </div>
+    </article>
     </>
   );
 };
