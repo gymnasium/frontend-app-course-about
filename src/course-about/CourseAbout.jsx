@@ -383,6 +383,7 @@ const CourseAbout = ({ GymSettings }) => {
   }, [data, GymCourseData]);
 
 
+  // Default LMS based overview data
   const short_desc = { __html: dompurify.sanitize(data?.short_description) };
   const overview = { __html: data?.overview };
   const overviewRef = useRef(null);
@@ -398,15 +399,16 @@ const CourseAbout = ({ GymSettings }) => {
       ></div>
   });
 
+  const Overview = CUSTOM_OVERVIEW ? GymOverview : CourseOverview;
+
   return (
     
     <div className="course-about">
       <CourseHeader />
 
-      <GymOverview />
+      <Overview ref={overviewRef} />
 
-      <hr />
-
+      {/* Unused, hidden */}
       <div className="unused hide">
         <div className="description" dangerouslySetInnerHTML={short_desc} />
         <span className="info-tab">
@@ -480,8 +482,6 @@ const CourseAbout = ({ GymSettings }) => {
           )}
         </div>
       </div>
-    
-      <CourseOverview ref={overviewRef} />
 
     </div>
   );
