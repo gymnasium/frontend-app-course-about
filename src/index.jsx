@@ -31,19 +31,12 @@ import './index.scss';
 const config = getConfig();
 const timestamp = Date.now();
 const settings = await GymSettings;
-const root = settings.urls.root; // should be same as marketing URL
-const css = `${root}${settings.css.mfe}?${timestamp}`;
+const root = config.MARKETING_SITE_BASE_URL ; // should be same as marketing URL
 const title = `Course About | ${config.SITE_NAME}`;
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider>
-      <Helmet>
-        <title>{title}</title>
-        
-        <link rel="shortcut icon" href={config.FAVICON_URL} type="image/x-icon" />
-        <link rel="stylesheet" href={css} />
-      </Helmet>
       <GymHeader secondaryNav="courses" />
       <main>
         <div className="container">

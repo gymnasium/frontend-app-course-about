@@ -190,13 +190,13 @@ const CourseAbout = ({ GymSettings }) => {
 
   const gymCourseId = data?.org + '-' + data?.number;
   const GymCourseData = GymSettings?.courses[gymCourseId];
-
   const courseType = data?.number < 100 ? 'Gym Short' : (data?.number >= 700 ? 'Workshop' : 'Full Course');
-
-  const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? null) : data?.name;
-
+  const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? 'Course About') : data?.name;
+  const metaTitle = `${courseTitle} | ${SITE_NAME}`;
+  const shortDesc = CUSTOM_OVERVIEW ? (GymCourseData?.description ?? GymSettings?.meta.description) : dompurify.sanitize(data?.short_description);
+  const metaImg = GymCourseData?.live ? `${GymSettings?.urls.root}/img/og/courses/gym-${data?.number}.png` : `${GymSettings?.urls.root}/img/og/gym-brand.png`;
+  const metaUrl = ROOT_URL + window.location.pathname; 
   const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? GymSettings?.urls.root + GymCourseData?.img : null) : data?.media?.image?.large;
-
   const courseImgAlt = `Image for ${courseTitle}`;
 
   const CTA = () => {
@@ -246,6 +246,7 @@ const CourseAbout = ({ GymSettings }) => {
       </header>
     )
   }
+
   // forwardRef((props, ref)
   const GymOverview = forwardRef((props, ref) => {
 
@@ -390,7 +391,7 @@ const CourseAbout = ({ GymSettings }) => {
 
 
   // Default LMS based overview data
-  const short_desc = { __html: dompurify.sanitize(data?.short_description) };
+  
   const overview = { __html: data?.overview };
   const overviewRef = useRef(null);
   const overviewSections = overviewRef?.current?.querySelectorAll('[id]');
@@ -412,7 +413,7 @@ const CourseAbout = ({ GymSettings }) => {
   const Unused = () => {
     return (
       <>
-        <div className="course-short-description" dangerouslySetInnerHTML={short_desc} />
+        <div className="course-short-description" dangerouslySetInnerHTML={shortDesc} />
         <div className="course-effort">
           <p><strong>Effort</strong>: {data?.effort} per week</p>
         </div>
@@ -483,7 +484,14 @@ const CourseAbout = ({ GymSettings }) => {
   return (
     <>
     <Helmet>
-      <title>{`${courseTitle} | ${SITE_NAME}`}</title>
+      <title>{metaTitle}</title>
+      <meta property="og:site_name" content={metaTitle} />
+      <meta name="twitter:title" property="og:title" content={courseTitle} />
+      <meta name="twitter:image:alt" property="og:image:alt" content={courseTitle} />
+      <meta name="description" content={shortDesc} />
+      <meta name="twitter:description" property="og:description" content={shortDesc} />
+      <meta name="twitter:image" property="og:image" content={metaImg} />
+      <meta name="twitter:url" property="og:url" content={metaUrl} />
     </Helmet>
     <article className="course-about">
       <CourseHeader />
