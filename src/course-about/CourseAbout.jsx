@@ -399,7 +399,80 @@ const CourseAbout = ({ GymSettings }) => {
       ></div>
   });
 
+  // Are we using the custom data?
   const Overview = CUSTOM_OVERVIEW ? GymOverview : CourseOverview;
+
+  // The folliwing is 
+  const Unused = () => {
+    return (
+      <>
+        <div className="course-short-description" dangerouslySetInnerHTML={short_desc} />
+        <div className="course-effort">
+          <p><strong>Effort</strong>: {data?.effort} per week</p>
+        </div>
+        <div className="course-pacing">
+          <p><strong>{courseDetails?.pacing_type}</strong>: 
+          {
+            courseDetails?.pacing_type === "Instructor Paced" ? <span>Learn together with instructor.</span> : <span>Go at your own speed</span>
+          }
+          </p>
+        </div>
+        <div className="unused hide">
+          
+          {/* Course Pricing */}
+          {courseDetails?.course_modes && 
+            <div className="course-pricing">
+              <p><strong>Pricing: </strong>
+              <span>{courseDetails?.course_modes[0]?.min_price === 0 ? (
+                FREE
+              ) : (
+                courseDetails?.course_modes[0]?.min_price +
+                courseDetails?.course_modes[0]?.currency
+              )}
+              </span>
+              </p>
+            </div>
+          }
+
+          {/* Course Dates */}
+          <div className="course-dates">
+            <ul>
+              <li><strong>Start Date: {date(data?.start)}</strong></li>
+              <li><strong>End Date: {date(data?.end)}</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="tabs-nav hide">
+          {overviewSections && overviewSectionsArray.map(({id}, index) => {
+            const section_id = id;
+            const title = id.replaceAll('course-', '');
+
+            return (
+              <TabItemComponent
+                key={title}
+                title={title}
+                onItemClicked={() => handleTabClick(index, section_id)}
+                isActive={active === index}
+              />
+            )
+            })}
+
+          <div className="tabitem">
+            {enrollMessage ? (
+            <button id="enroll-button" className="tabitem" disabled="true">
+              {enrollMessage}
+            </button>
+            ) : (
+            <button onClick={handleEnroll} id="enroll-button" className="tabitem" disabled={enrolled}>
+            {enrolled ? 'You are already enrolled' : 'Enroll now'}
+            </button>
+            )}
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     
@@ -407,81 +480,6 @@ const CourseAbout = ({ GymSettings }) => {
       <CourseHeader />
 
       <Overview ref={overviewRef} />
-
-      {/* Unused, hidden */}
-      <div className="unused hide">
-        <div className="description" dangerouslySetInnerHTML={short_desc} />
-        <span className="info-tab">
-          <div className="text-block">
-            <strong className="text-block-header"> Effort</strong>
-            <br />
-            <strong className="text-block-footer">{data?.effort} per week</strong>
-          </div>
-        </span>
-        <span className="info-tab">
-          <div className="text-block">
-            <strong className="text-block-header">{courseDetails?.pacing_type}</strong>
-            <br />
-            {
-              courseDetails?.pacing_type === "Instructor Paced" ? 
-              <strong className="text-block-footer">Learn together with instructor</strong> 
-              : 
-              <strong className="text-block-footer">Go at your own speed</strong>
-            }
-          </div>
-        </span>
-        {/* Course Pricing */}
-        {courseDetails?.course_modes && <span className="course-details">
-          {courseDetails?.course_modes[0]?.min_price === 0 ? (
-            <span className="info-tab">
-              <div className="text-block">
-                <strong className="text-block-header">Free!</strong>
-                <br />
-                <strong className="text-block-footer">100% free course</strong>
-              </div>
-            </span>
-          ) : (
-            courseDetails?.course_modes[0]?.min_price +
-            courseDetails?.course_modes[0]?.currency
-          )}
-        </span>}
-        {/* Course Dates */}
-        <span className="info-tab">
-          <div className="text-block">
-            <strong className="text-block-header">Start Date: {date(data?.start)}</strong>
-            <br />
-            <strong className="text-block-footer">End Date: {date(data?.end)}</strong>
-          </div>
-        </span>
-      </div>
-      
-      <div className="tabs-nav hide">
-        {overviewSections && overviewSectionsArray.map(({id}, index) => {
-          const section_id = id;
-          const title = id.replaceAll('course-', '');
-
-          return (
-            <TabItemComponent
-              key={title}
-              title={title}
-              onItemClicked={() => handleTabClick(index, section_id)}
-              isActive={active === index}
-            />
-          )
-          })}
-
-        <div className="tabitem">
-          {enrollMessage ? (
-          <button id="enroll-button" className="tabitem" disabled="true">
-            {enrollMessage}
-          </button>
-          ) : (
-          <button onClick={handleEnroll} id="enroll-button" className="tabitem" disabled={enrolled}>
-          {enrolled ? 'You are already enrolled' : 'Enroll now'}
-          </button>
-          )}
-        </div>
-      </div>
 
     </div>
   );
