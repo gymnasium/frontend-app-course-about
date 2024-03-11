@@ -264,6 +264,7 @@ const CourseAbout = ({ GymSettings }) => {
     const audience = GymCourseData?.audience ?? null;
     const video_src = GymCourseData?.preview_video_src ?? null;
 
+    // Outline Items
     const outlineItems = outline?.map((item, index) => {
       const desc = {__html: item?.description};
       return <li key={`item-${index}`}>
@@ -272,22 +273,24 @@ const CourseAbout = ({ GymSettings }) => {
       </li>
     });
 
-    function renderSectionData(arr) {
-      if (arr) {
-        if (typeof arr === 'string') {
-          const desc = {__html: arr };
+    // Process input, whether a simple string or array
+    function renderSectionData(input) {
+      if (input) {
+        // If the input is a raw HTML string
+        if (typeof input === 'string') {
+          const desc = {__html: input };
           return <div dangerouslySetInnerHTML={desc} />;
 
-        } else if (typeof arr === 'object') {
-
-          if (arr.length > 1) {
-            const listItems = arr.map((item, index) => {
+        } else if (typeof input === 'object') {
+          // Generate lists only if the array has more than one item
+          if (input.length > 1) {
+            const listItems = input.map((item, index) => {
               const desc = { __html: item.label };
               return <li key={`item-${index}`} dangerouslySetInnerHTML={desc} />;
             });
             return <ul>{listItems}</ul>;
           } else {
-            const desc = { __html: arr[0].label };
+            const desc = { __html: input[0].label };
             return <p dangerouslySetInnerHTML={desc} />;
           }
         }
@@ -307,7 +310,6 @@ const CourseAbout = ({ GymSettings }) => {
 
     return (
     <>
-      <CourseHeader/>
 
       {intro && (
         <section className="course-intro">
@@ -399,10 +401,11 @@ const CourseAbout = ({ GymSettings }) => {
   return (
     
     <div className="course-about">
+      <CourseHeader />
+
       <GymOverview />
 
-      <CourseHeader />
-      
+      <hr />
 
       <div className="unused hide">
         <div className="description" dangerouslySetInnerHTML={short_desc} />
