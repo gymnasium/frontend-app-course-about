@@ -1,5 +1,6 @@
 import React, { forwardRef, useState, useEffect, useContext, useRef } from "react";
 import { AppContext } from '@edx/frontend-platform/react';
+import { Helmet } from 'react-helmet';
 
 import dompurify from 'dompurify';
 
@@ -9,6 +10,7 @@ import TabItemComponent from "./TabItem";
 import { getConfig } from "@edx/frontend-platform";
 import { useParams } from "react-router";
 
+const SITE_NAME =  getConfig().SITE_NAME;
 const ROOT_URL = getConfig().MARKETING_SITE_BASE_URL;
 const LMS_BASE_URL = getConfig().LMS_BASE_URL;
 const LEARNING_BASE_URL = getConfig().LEARNING_BASE_URL;
@@ -244,8 +246,8 @@ const CourseAbout = ({ GymSettings }) => {
       </header>
     )
   }
-
-  const GymOverview = () => {
+  // forwardRef((props, ref)
+  const GymOverview = forwardRef((props, ref) => {
 
     const courseDate = GymCourseData?.date ?? null;
     const courseLive = GymCourseData?.live ?? false;
@@ -369,7 +371,8 @@ const CourseAbout = ({ GymSettings }) => {
       )}
 
     </>
-  )};
+    )
+  });
 
   // debug/logging
   useEffect(() => {
@@ -475,13 +478,17 @@ const CourseAbout = ({ GymSettings }) => {
   }
 
   return (
-    
+    <>
+    <Helmet>
+      <title>{`${courseTitle} | ${SITE_NAME}`}</title>
+    </Helmet>
     <div className="course-about">
       <CourseHeader />
 
       <Overview ref={overviewRef} />
 
     </div>
+    </>
   );
 };
 

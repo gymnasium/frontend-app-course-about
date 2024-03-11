@@ -40,8 +40,7 @@ subscribe(APP_READY, () => {
     <AppProvider>
       <Helmet>
         <title>{title}</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
         <link rel="shortcut icon" href={config.FAVICON_URL} type="image/x-icon" />
         <link rel="stylesheet" href={css} />
       </Helmet>
