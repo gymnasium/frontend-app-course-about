@@ -25,6 +25,7 @@ const CourseAbout = ({ GymSettings }) => {
   const [courseId, setCourseId] = useState();
   const [enrolled, setEnrolled] = useState(false);
   const [enrollMessage, setEnrollMessage] = useState("");
+  const [courseClosed, setCourseClosed ] = useState(false);
 
   const { authenticatedUser } = useContext(AppContext);
 
@@ -121,6 +122,7 @@ const CourseAbout = ({ GymSettings }) => {
       })
       .then(response => response.text()) // Extract the text from the response
       .then(text => {
+        console.log(`response.text: `, text);
         // If the response text is empty, set enrolled to false and return
         if (!text) {
           setEnrolled(false);
@@ -134,7 +136,9 @@ const CourseAbout = ({ GymSettings }) => {
             credentials: 'include'
           })
           .then(res => {
-            if(res.redirected) {
+            console.log(`res`, res);
+            if (res.redirected) {
+              setCourseClosed(true);
               setEnrollMessage("Enrollment Closed");
               return {};
             } else {
@@ -144,6 +148,7 @@ const CourseAbout = ({ GymSettings }) => {
           .then(outlineData => {
             // If "can_enroll" is false, set enroll message
             if (outlineData.enroll_alert && !outlineData.enroll_alert.can_enroll) {
+              setCourseClosed(true);
               setEnrollMessage("Enrollment Closed");
             }
           })
@@ -153,11 +158,15 @@ const CourseAbout = ({ GymSettings }) => {
         const data = JSON.parse(text);
     
         if (Object.keys(data).length !== 0) { // Check if the object is not empty
+          // Prevent enrollments if the course isn't active
           if (data.is_active) {
             setEnrolled(true);
-            // setCourseLink(data.course_target);
-            // setShowCourseLink(true);
-          } 
+          } else {
+            // TODO: account for viewable, closed courses (ie, retired courses that still permit viewing, but no certificates)
+            setEnrolled(false);
+            setCourseClosed(true);
+            setEnrollMessage("Enrollment Closed");
+          }
         } else {
           setEnrolled(false);
         }
@@ -190,6 +199,15 @@ const CourseAbout = ({ GymSettings }) => {
 
   const gymCourseId = data?.org + '-' + data?.number;
   const GymCourseData = GymSettings?.courses[gymCourseId];
+
+  const courseStartDate = GymCourseData?.date ? date(GymCourseData?.date) : date(data?.start);
+  const courseEndDate = data?.end ? date(data?.end) : null;
+
+  const courseLive = GymCourseData?.live ?? false;
+  const retiredMessage = GymCourseData?.retired_message ? {__html: GymCourseData?.retired_message[1]} : null;
+  const courseRetired = GymCourseData?.retired_message ? true : false;
+  const courseTopic = GymCourseData?.topic ?? null;
+
   const courseType = data?.number < 100 ? 'Gym Short' : (data?.number >= 700 ? 'Workshop' : 'Full Course');
   const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? 'Course About') : data?.name;
   const metaTitle = `${courseTitle} | ${SITE_NAME}`;
@@ -241,6 +259,11 @@ const CourseAbout = ({ GymSettings }) => {
             <h1>{courseTitle}</h1>
           )}
           <p>{courseType}</p>
+
+          {courseRetired && (
+            <p dangerouslySetInnerHTML={retiredMessage}></p>
+          )}
+
           <CTA />
         </div>
       </header>
@@ -249,10 +272,6 @@ const CourseAbout = ({ GymSettings }) => {
 
   // forwardRef((props, ref)
   const GymOverview = forwardRef((props, ref) => {
-
-    const courseDate = GymCourseData?.date ?? null;
-    const courseLive = GymCourseData?.live ?? false;
-    const courseTopic = GymCourseData?.topic ?? null;
 
     const instructorSlug = GymCourseData?.instructor ?? null;
     const bio = GymSettings?.bios[instructorSlug] ?? null;
@@ -272,7 +291,7 @@ const CourseAbout = ({ GymSettings }) => {
       const desc = {__html: item?.description};
       return <li key={`item-${index}`}>
         <h3>{item?.label}</h3>
-        <p dangerouslySetInnerHTML={desc}/>
+        <p dangerouslySetInnerHTML={desc} />
       </li>
     });
 
@@ -382,10 +401,12 @@ const CourseAbout = ({ GymSettings }) => {
   useEffect(() => {
     if (data) {
       console.log(`data: `,data);
+      // console.log(`lms dates: `, date(data?.start), date(data?.end));
     }
   
     if (GymCourseData) {
       console.log(`GymCourseData: `, GymCourseData);
+      // console.log(`11ty dates: `,date(GymCourseData?.date));
     }
   }, [data, GymCourseData]);
 
@@ -409,29 +430,37 @@ const CourseAbout = ({ GymSettings }) => {
   // Are we using the custom data?
   const Overview = CUSTOM_OVERVIEW ? GymOverview : CourseOverview;
 
-  // The folliwing is 
+
+  // These sections are currently unused
   const Unused = () => {
+    const pacing = courseDetails?.pacing_type ?? null;
+  
+    const effort = GymCourseData?.completion_duration ? GymCourseData?.completion_duration : (`${courseDetails?.effort} per week` ?? null);
+
     return (
       <>
-        <div className="course-short-description" dangerouslySetInnerHTML={shortDesc} />
-        <div className="course-effort">
-          <p><strong>Effort</strong>: {data?.effort} per week</p>
-        </div>
-        <div className="course-pacing">
-          <p><strong>{courseDetails?.pacing_type}</strong>: 
-          {
-            courseDetails?.pacing_type === "Instructor Paced" ? (<span>Learn together with instructor.</span>) : (<span>Go at your own speed.</span>)
-          }
-          </p>
-        </div>
-        <div className="unused hide">
+
+        <footer className="unused hide">
+          <hr/>
+          <div className="course-short-description" dangerouslySetInnerHTML={ { __html: shortDesc } } />
+          {effort && (
+            <div className="course-effort">
+              <p><strong>Effort</strong>: {effort}</p>
+            </div>
+          )}
+          
+          {pacing && (
+            <div className="course-pacing">
+              <p><strong>Pacing: </strong> {pacing}</p>
+            </div>
+          )}
           
           {/* Course Pricing */}
           {courseDetails?.course_modes && 
             <div className="course-pricing">
               <p><strong>Pricing: </strong>
               <span>{courseDetails?.course_modes[0]?.min_price === 0 ? (
-                FREE
+                'FREE'
               ) : (
                 courseDetails?.course_modes[0]?.min_price +
                 courseDetails?.course_modes[0]?.currency
@@ -444,39 +473,42 @@ const CourseAbout = ({ GymSettings }) => {
           {/* Course Dates */}
           <div className="course-dates">
             <ul>
-              <li><strong>Start Date: {date(data?.start)}</strong></li>
-              <li><strong>End Date: {date(data?.end)}</strong></li>
+              <li><strong>Start Date:</strong> {courseStartDate}</li>
+              {courseEndDate && (
+                <li><strong>End Date:</strong> {courseEndDate}</li>
+              )}
             </ul>
           </div>
-        </div>
 
-        <div className="tabs-nav hide">
-          {overviewSections && overviewSectionsArray.map(({id}, index) => {
-            const section_id = id;
-            const title = id.replaceAll('course-', '');
+          <div className="tabs-nav">
+            {overviewSections && overviewSectionsArray.map(({id}, index) => {
+              const section_id = id;
+              const title = id.replaceAll('course-', '');
 
-            return (
-              <TabItemComponent
-                key={title}
-                title={title}
-                onItemClicked={() => handleTabClick(index, section_id)}
-                isActive={active === index}
-              />
-            )
-            })}
+              return (
+                <TabItemComponent
+                  key={title}
+                  title={title}
+                  onItemClicked={() => handleTabClick(index, section_id)}
+                  isActive={active === index}
+                />
+              )
+              })}
 
-          <div className="tabitem">
-            {enrollMessage ? (
-            <button id="enroll-button" className="tabitem" disabled="true">
-              {enrollMessage}
-            </button>
-            ) : (
-            <button onClick={handleEnroll} id="enroll-button" className="tabitem" disabled={enrolled}>
-            {enrolled ? 'You are already enrolled' : 'Enroll now'}
-            </button>
-            )}
+            <div className="tabitem">
+              {enrollMessage ? (
+              <button id="enroll-button" className="tabitem" disabled="true">
+                {enrollMessage}
+              </button>
+              ) : (
+              <button onClick={handleEnroll} id="enroll-button" className="tabitem" disabled={enrolled}>
+              {enrolled ? 'You are already enrolled' : 'Enroll now'}
+              </button>
+              )}
+            </div>
           </div>
-        </div>
+
+        </footer>
       </>
     );
   }
@@ -493,11 +525,12 @@ const CourseAbout = ({ GymSettings }) => {
       <meta name="twitter:image" property="og:image" content={metaImg} />
       <meta name="twitter:url" property="og:url" content={metaUrl} />
     </Helmet>
-    <article className="course-about">
+    <article className="course-about layout-sidebar">
       <CourseHeader />
 
       <Overview ref={overviewRef} />
 
+      <Unused />
     </article>
     </>
   );
