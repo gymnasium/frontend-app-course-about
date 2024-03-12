@@ -254,14 +254,21 @@ const CourseAbout = ({ GymSettings }) => {
             <img src={courseImg} alt={courseImgAlt} />
           </figure>
         )}
-        <div className="course-title">
+        <div className="course-metabar">
           {courseTitle && (
-            <h1>{courseTitle}</h1>
+            <div className="course-title">
+              <h1>{courseTitle}</h1>
+            </div>
           )}
-          <p>{courseType}</p>
+
+          <div className="course-type">
+            <p>{courseType}</p>
+          </div>
 
           {courseRetired && (
-            <p dangerouslySetInnerHTML={retiredMessage}></p>
+            <div className="course-messaging">
+              <p dangerouslySetInnerHTML={retiredMessage}></p>
+            </div>
           )}
 
           <CTA />
