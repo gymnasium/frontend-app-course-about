@@ -28,18 +28,13 @@ import CourseAbout from './course-about/CourseAbout';
 
 import './index.scss';
 
-const config = getConfig();
-const timestamp = Date.now();
-const settings = await GymSettings;
-const root = config.MARKETING_SITE_BASE_URL ; // should be same as marketing URL
-const title = `Course About | ${config.SITE_NAME}`;
-
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider>
       <GymHeader secondaryNav="courses" />
       <main>
         <div className="container">
+          {/* TODO: add routes */}
           <CourseAbout GymSettings={GymSettings} />
         </div>
       </main>
@@ -50,7 +45,19 @@ subscribe(APP_READY, () => {
 });
 
 subscribe(APP_INIT_ERROR, (error) => {
-  ReactDOM.render(<ErrorPage message={error.message} />, document.getElementById('root'));
+  ReactDOM.render(
+    <AppProvider>
+      <GymHeader secondaryNav="courses" />
+      <main>
+        <div className="container">
+          {/* TODO: add routes? */}
+          <ErrorPage message={error.message} />
+        </div>
+      </main>
+      <GymFooter />
+    </AppProvider>,
+    document.getElementById('root')
+  );
 });
 
 initialize({
