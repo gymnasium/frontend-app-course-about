@@ -21,8 +21,9 @@ const CourseAbout = ({ GymSettings }) => {
   const params = useParams();
   const [data, setData] = useState(null);
   const [courseDetails, setCourseDetails] = useState(null);
-  const [active, setActive] = useState(1);
+  const [tabActive, setTabActive] = useState(1);
   const [courseId, setCourseId] = useState();
+  const [courseEndDate, setCourseEndDate] = useState();
   const [enrolled, setEnrolled] = useState(false);
   const [enrollMessage, setEnrollMessage] = useState("");
   const [courseClosed, setCourseClosed ] = useState(false);
@@ -54,7 +55,8 @@ const CourseAbout = ({ GymSettings }) => {
     return cookieValue;
   }
 
-  let date = (str) => {
+  // pretty date
+  const prettyDate = (str) => {
     let unformatData = new Date(str);
     const options = {
       day: "numeric",
@@ -63,9 +65,24 @@ const CourseAbout = ({ GymSettings }) => {
     return unformatData.toLocaleDateString("en-US", options);
   };
 
+  const today = new Date().toJSON();
+
+  // compare dates
+  const datePassed = (d1, d2) => {
+    let date1 = new Date(d1).getTime();
+    let date2 = new Date(d2).getTime();
+  
+    if (date1 < date2) {
+      return false;
+    } else if (date1 >= date2) {
+      console.log(`the date has passed.`);
+      return true;
+    }
+  };
+
   // Tab Navigation Clicks
   const handleTabClick = (id, section_id) => {
-    setActive(id);
+    setTabActive(id);
   
     const sectionElement = document.getElementById(section_id);
     if (sectionElement) {
@@ -104,13 +121,14 @@ const CourseAbout = ({ GymSettings }) => {
       if (response.ok) { 
         setEnrolled(true);
       }
-      //...
+      //...do more stuff here?
     } catch (error) {
       console.error(error);
     }
   }
 
   useEffect(() => {
+
     if (courseId) {
       const encodedCourseId = encodeURIComponent(courseId);
       fetch(`${LMS_BASE_URL}/api/enrollment/v1/enrollment/${encodedCourseId}`, {
@@ -122,7 +140,6 @@ const CourseAbout = ({ GymSettings }) => {
       })
       .then(response => response.text()) // Extract the text from the response
       .then(text => {
-        console.log(`response.text: `, text);
         // If the response text is empty, set enrolled to false and return
         if (!text) {
           setEnrolled(false);
@@ -136,36 +153,34 @@ const CourseAbout = ({ GymSettings }) => {
             credentials: 'include'
           })
           .then(res => {
-            console.log(`res`, res);
+
             if (res.redirected) {
-              setCourseClosed(true);
               setEnrollMessage("Enrollment Closed");
+
               return {};
             } else {
+              console.log(`res.json(): `, res.json());
               return res.json();
             }
           })
           .then(outlineData => {
+            console.log(`response outlineData:`, outlineData);
             // If "can_enroll" is false, set enroll message
             if (outlineData.enroll_alert && !outlineData.enroll_alert.can_enroll) {
-              setCourseClosed(true);
               setEnrollMessage("Enrollment Closed");
             }
-          })
+          });
         }
     
         // Otherwise, parse the text as JSON and continue
-        const data = JSON.parse(text);
-    
-        if (Object.keys(data).length !== 0) { // Check if the object is not empty
-          // Prevent enrollments if the course isn't active
-          if (data.is_active) {
+        const responseData = JSON.parse(text);
+
+        console.log(`response data: `, responseData);
+
+        if (Object.keys(responseData).length !== 0) { // Check if the object is not empty
+          // This checks if the user is enrolled in the course already
+          if (responseData.is_active) {
             setEnrolled(true);
-          } else {
-            // TODO: account for viewable, closed courses (ie, retired courses that still permit viewing, but no certificates)
-            setEnrolled(false);
-            setCourseClosed(true);
-            setEnrollMessage("Enrollment Closed");
           }
         } else {
           setEnrolled(false);
@@ -178,19 +193,21 @@ const CourseAbout = ({ GymSettings }) => {
   }, [courseId, data]);
 
   useEffect(() => {
+
     if (courseId) {
       const Course = `${LMS_BASE_URL}/api/courses/v1/courses/${courseId}`;
       const Enrollment = `${LMS_BASE_URL}/api/enrollment/v1/course/${courseId}`;
-  
-      const update_data = async function () {
+
+      const updateData = async function () {
         const [firstResponse, secondResponse] = await Promise.all([
           axios.get(Course),
           axios.get(Enrollment),
         ]);
+
         setData(firstResponse.data);
         setCourseDetails(secondResponse.data);
       };
-      update_data();
+      updateData();
     }
   }, [courseId]);
 
@@ -200,8 +217,7 @@ const CourseAbout = ({ GymSettings }) => {
   const gymCourseId = data?.org + '-' + data?.number;
   const GymCourseData = GymSettings?.courses[gymCourseId];
 
-  const courseStartDate = GymCourseData?.date ? date(GymCourseData?.date) : date(data?.start);
-  const courseEndDate = data?.end ? date(data?.end) : null;
+  const courseStartDate = GymCourseData?.date ? prettyDate(GymCourseData?.date) : prettyDate(data?.start);
 
   const courseLive = GymCourseData?.live ?? false;
   const retiredMessage = GymCourseData?.retired_message ? {__html: GymCourseData?.retired_message[1]} : null;
@@ -222,7 +238,7 @@ const CourseAbout = ({ GymSettings }) => {
       <div className="course-cta">
         {
           enrollMessage ? (
-            <button className="btn" disabled="true">
+            <button className="btn" disabled="disabled">
               {enrollMessage}
             </button>
           ) : (
@@ -331,7 +347,7 @@ const CourseAbout = ({ GymSettings }) => {
 
     function PreviewVideo() {
       return (
-        <div className="iframe-video-holder ratio-16-9">
+        <div className="embed-responsive embed-responsive-16by9 iframe-video-holder ratio-16-9">
           <iframe width="100%" height="425" frameBorder="0" src={video_src} allow="encrypted-media" allowFullScreen title={`${courseTitle} Preview`} />
         </div>
       );
@@ -339,7 +355,7 @@ const CourseAbout = ({ GymSettings }) => {
 
     return (
     <>
-      <div>
+      <div className="content">
         {intro && (
           <section className="course-intro">
             <p dangerouslySetInnerHTML={intro}/>
@@ -408,12 +424,12 @@ const CourseAbout = ({ GymSettings }) => {
   useEffect(() => {
     if (data) {
       console.log(`data: `,data);
-      // console.log(`lms dates: `, date(data?.start), date(data?.end));
+      // console.log(`lms dates: `, prettyDate(data?.start), prettyDate(data?.end));
     }
   
     if (GymCourseData) {
       console.log(`GymCourseData: `, GymCourseData);
-      // console.log(`11ty dates: `,date(GymCourseData?.date));
+      // console.log(`11ty dates: `, prettyDate(GymCourseData?.date));
     }
   }, [data, GymCourseData]);
 
@@ -497,7 +513,7 @@ const CourseAbout = ({ GymSettings }) => {
                   key={title}
                   title={title}
                   onItemClicked={() => handleTabClick(index, section_id)}
-                  isActive={active === index}
+                  isActive={tabActive === index}
                 />
               )
               })}
@@ -532,7 +548,7 @@ const CourseAbout = ({ GymSettings }) => {
       <meta name="twitter:image" property="og:image" content={metaImg} />
       <meta name="twitter:url" property="og:url" content={metaUrl} />
     </Helmet>
-    <article className="course-about layout-sidebar">
+    <article className="course-about grid-sidebar">
       <CourseHeader />
 
       <Overview ref={overviewRef} />
