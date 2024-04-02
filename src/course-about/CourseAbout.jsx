@@ -228,9 +228,9 @@ const CourseAbout = ({ GymSettings }) => {
   const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? 'Course About') : data?.name;
   const metaTitle = `${courseTitle} | ${SITE_NAME}`;
   const shortDesc = CUSTOM_OVERVIEW ? (GymCourseData?.description ?? GymSettings?.meta.description) : dompurify.sanitize(data?.short_description);
-  const metaImg = GymCourseData?.live ? `${GymSettings?.urls.root}/img/og/courses/gym-${data?.number}.png` : `${GymSettings?.urls.root}/img/og/gym-brand.png`;
+  const metaImg = GymCourseData?.live ? `${GymSettings?.urls.root}/img/og/courses/gym-${data?.number}.png` : `${GymSettings?.urls?.root}/img/og/gym-brand.png`;
   const metaUrl = ROOT_URL + window.location.pathname; 
-  const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? GymSettings?.urls.root + GymCourseData?.img : null) : data?.media?.image?.large;
+  const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? GymSettings?.urls?.root + GymCourseData?.img : null) : data?.media?.image?.large;
   const courseImgAlt = `Image for ${courseTitle}`;
 
   const CTA = () => {
@@ -547,6 +547,8 @@ const CourseAbout = ({ GymSettings }) => {
       <meta name="twitter:description" property="og:description" content={shortDesc} />
       <meta name="twitter:image" property="og:image" content={metaImg} />
       <meta name="twitter:url" property="og:url" content={metaUrl} />
+      <link rel="shortcut icon" href="<%= process.env.FAVICON_URL %>" type="image/x-icon" />
+      <link rel="stylesheet" href="{{ GymSettings?.urls?.root }}/css/mfe-course-about.css" />
     </Helmet>
     <article className="course-about grid-sidebar">
       <CourseHeader />

@@ -1,6 +1,6 @@
 {
   "name": "@edx/frontend-app-course-about",
-  "version": "1.0.0-gym.quince.1",
+  "version": "1.0.1-gym.quince.1",
   "description": "MFE to handle course about",
   "repository": {
     "type": "git",
