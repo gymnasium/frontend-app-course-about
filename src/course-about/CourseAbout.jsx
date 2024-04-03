@@ -7,8 +7,10 @@ import dompurify from 'dompurify';
 import axios from "axios";
 import TabItemComponent from "./TabItem";
 
-import { getConfig } from "@edx/frontend-platform";
+import { ensureConfig, getConfig } from "@edx/frontend-platform";
 import { useParams } from "react-router";
+
+ensureConfig(['LEARNING_BASE_URL','LMS_BASE_URL','MARKETING_SITE_BASE_URL','STUDIO_BASE_URL']);
 
 const SITE_NAME =  getConfig().SITE_NAME;
 const ROOT_URL = getConfig().MARKETING_SITE_BASE_URL;
@@ -16,6 +18,8 @@ const LMS_BASE_URL = getConfig().LMS_BASE_URL;
 const LEARNING_BASE_URL = getConfig().LEARNING_BASE_URL;
 const LOGIN_URL = getConfig().LOGIN_URL;
 const STUDIO_BASE_URL = getConfig().STUDIO_BASE_URL;
+
+const timestamp = Date.now();
 
 const CourseAbout = ({ GymSettings }) => {
   const params = useParams();
@@ -212,6 +216,7 @@ const CourseAbout = ({ GymSettings }) => {
   }, [courseId]);
 
   // Flag to toggle between LMS data and data sourced from static site JSON
+  // TODO: set this in .env files?
   const CUSTOM_OVERVIEW = true;
 
   const gymCourseId = data?.org + '-' + data?.number;
@@ -547,8 +552,8 @@ const CourseAbout = ({ GymSettings }) => {
       <meta name="twitter:description" property="og:description" content={shortDesc} />
       <meta name="twitter:image" property="og:image" content={metaImg} />
       <meta name="twitter:url" property="og:url" content={metaUrl} />
-      <link rel="shortcut icon" href="<%= process.env.FAVICON_URL %>" type="image/x-icon" />
-      <link rel="stylesheet" href="{{ GymSettings?.urls?.root }}/css/mfe-course-about.css" />
+      <link rel="shortcut icon" href={`${GymSettings?.urls?.root}/favicon.svg`} type="image/x-icon" />
+      <link rel="stylesheet" href={`${GymSettings?.urls?.root}/css/mfe-course-about.css?${timestamp}`} />
     </Helmet>
     <article className="course-about grid-sidebar">
       <CourseHeader />

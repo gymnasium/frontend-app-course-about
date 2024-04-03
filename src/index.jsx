@@ -4,10 +4,13 @@ import 'regenerator-runtime/runtime';
 import {
   APP_INIT_ERROR,
   APP_READY,
+  ensureConfig,
   getConfig,
   initialize,
   subscribe,
 } from '@edx/frontend-platform';
+
+ensureConfig(['MARKETING_SITE_BASE_URL']);
 
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
