@@ -25,7 +25,7 @@ import { Helmet } from 'react-helmet';
 
 import appMessages from './i18n';
 
-import GymSettings, { GymFooter, GymHeader } from '@edx/gym-frontend';
+import { GymSettings, GymFooter, GymHeader, timestamp } from '@edx/gym-frontend';
 
 import CourseAbout from './course-about/CourseAbout';
 
@@ -38,7 +38,7 @@ subscribe(APP_READY, () => {
       <main>
         <div className="container">
           {/* TODO: add routes */}
-          <CourseAbout GymSettings={GymSettings} />
+          <CourseAbout GymSettings={GymSettings} timestamp={timestamp} />
         </div>
       </main>
       <GymFooter />

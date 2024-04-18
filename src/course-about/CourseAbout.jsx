@@ -12,16 +12,14 @@ import { useParams } from "react-router";
 
 ensureConfig(['LEARNING_BASE_URL','LMS_BASE_URL','MARKETING_SITE_BASE_URL','STUDIO_BASE_URL']);
 
-const SITE_NAME =  getConfig().SITE_NAME;
-const ROOT_URL = getConfig().MARKETING_SITE_BASE_URL;
-const LMS_BASE_URL = getConfig().LMS_BASE_URL;
-const LEARNING_BASE_URL = getConfig().LEARNING_BASE_URL;
-const LOGIN_URL = getConfig().LOGIN_URL;
-const STUDIO_BASE_URL = getConfig().STUDIO_BASE_URL;
+const getSiteName = () => getConfig().SITE_NAME;
+const getBaseUrl = () => getConfig().MARKETING_SITE_BASE_URL;
+const getLmsBaseUrl = () => getConfig().LMS_BASE_URL;
+const getLearningBaseUrl = () => getConfig().LEARNING_BASE_URL;
+const getLoginUrl = () => getConfig().LOGIN_URL;
+const getStudioBaseUrl = () => getConfig().STUDIO_BASE_URL;
 
-const timestamp = Date.now();
-
-const CourseAbout = ({ GymSettings }) => {
+const CourseAbout = ({ GymSettings, timestamp }) => {
   const params = useParams();
   const [data, setData] = useState(null);
   const [courseDetails, setCourseDetails] = useState(null);
@@ -99,8 +97,8 @@ const CourseAbout = ({ GymSettings }) => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      let redirection = `${LEARNING_BASE_URL}/learning/course/${courseId}/home`
-      window.location.href = `${LOGIN_URL}?next=${encodeURIComponent(redirection)}`;
+      let redirection = `${getLearningBaseUrl()}/learning/course/${courseId}/home`
+      window.location.href = `${getLoginUrl()}?next=${encodeURIComponent(redirection)}`;
       return;
     }
 
@@ -112,7 +110,7 @@ const CourseAbout = ({ GymSettings }) => {
     const csrftoken = getCookie('csrftoken');
 
     try {
-      const response = await fetch(`${LMS_BASE_URL}/change_enrollment`, {
+      const response = await fetch(`${getLmsBaseUrl()}/change_enrollment`, {
         method: 'POST',
         headers: {
           'Accept': 'text/plain, */*; q=0.01',
@@ -135,7 +133,7 @@ const CourseAbout = ({ GymSettings }) => {
 
     if (courseId) {
       const encodedCourseId = encodeURIComponent(courseId);
-      fetch(`${LMS_BASE_URL}/api/enrollment/v1/enrollment/${encodedCourseId}`, {
+      fetch(`${getLmsBaseUrl()}/api/enrollment/v1/enrollment/${encodedCourseId}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -149,7 +147,7 @@ const CourseAbout = ({ GymSettings }) => {
           setEnrolled(false);
           
           // Make another API request to check for enrollment closure or possibility
-          fetch(`${LMS_BASE_URL}/api/course_home/v1/outline/${encodedCourseId}`, {
+          fetch(`${getLmsBaseUrl()}/api/course_home/v1/outline/${encodedCourseId}`, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -199,8 +197,8 @@ const CourseAbout = ({ GymSettings }) => {
   useEffect(() => {
 
     if (courseId) {
-      const Course = `${LMS_BASE_URL}/api/courses/v1/courses/${courseId}`;
-      const Enrollment = `${LMS_BASE_URL}/api/enrollment/v1/course/${courseId}`;
+      const Course = `${getLmsBaseUrl()}/api/courses/v1/courses/${courseId}`;
+      const Enrollment = `${getLmsBaseUrl()}/api/enrollment/v1/course/${courseId}`;
 
       const updateData = async function () {
         const [firstResponse, secondResponse] = await Promise.all([
@@ -231,10 +229,10 @@ const CourseAbout = ({ GymSettings }) => {
 
   const courseType = data?.number < 100 ? 'Gym Short' : (data?.number >= 700 ? 'Workshop' : 'Full Course');
   const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? 'Course About') : data?.name;
-  const metaTitle = `${courseTitle} | ${SITE_NAME}`;
+  const metaTitle = `${courseTitle} | ${getSiteName()}`;
   const shortDesc = CUSTOM_OVERVIEW ? (GymCourseData?.description ?? GymSettings?.meta.description) : dompurify.sanitize(data?.short_description);
   const metaImg = GymCourseData?.live ? `${GymSettings?.urls.root}/img/og/courses/gym-${data?.number}.png` : `${GymSettings?.urls?.root}/img/og/gym-brand.png`;
-  const metaUrl = ROOT_URL + window.location.pathname; 
+  const metaUrl = getBaseUrl + window.location.pathname; 
   const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? GymSettings?.urls?.root + GymCourseData?.img : null) : data?.media?.image?.large;
   const courseImgAlt = `Image for ${courseTitle}`;
 
@@ -255,7 +253,7 @@ const CourseAbout = ({ GymSettings }) => {
           )
         }
         {enrolled && (
-          <a className="btn" href={`${LEARNING_BASE_URL}/learning/course/${courseId}/home`}>
+          <a className="btn" href={`${getLearningBaseUrl()}/learning/course/${courseId}/home`}>
             Go to Class
           </a>
         )}
@@ -304,7 +302,7 @@ const CourseAbout = ({ GymSettings }) => {
     const instructorSlug = GymCourseData?.instructor ?? null;
     const bio = GymSettings?.bios[instructorSlug] ?? null;
     const instructorBlurb = {__html: bio?.extended_description ? bio?.extended_description : bio?.description};
-    const instructorImg = `${ROOT_URL}${bio?.img}`;
+    const instructorImg = `${getBaseUrl()}${bio?.img}`;
     const headings = GymSettings?.messages?.mfe?.course_about?.headings;
     const intro = { __html: GymCourseData?.intro };
     const about = { __html: GymCourseData?.about };
@@ -552,8 +550,8 @@ const CourseAbout = ({ GymSettings }) => {
       <meta name="twitter:description" property="og:description" content={shortDesc} />
       <meta name="twitter:image" property="og:image" content={metaImg} />
       <meta name="twitter:url" property="og:url" content={metaUrl} />
-      <link rel="shortcut icon" href={`${GymSettings?.urls?.root}/favicon.svg`} type="image/x-icon" />
-      <link rel="stylesheet" href={`${GymSettings?.urls?.root}/css/mfe-course-about.css?${timestamp}`} />
+      <link rel="shortcut icon" href={`${getBaseUrl()}/favicon.svg`} type="image/x-icon" />
+      <link rel="stylesheet" href={`${getBaseUrl()}/css/mfe-course-about.css?${timestamp}`} />
     </Helmet>
     <article className="course-about grid-sidebar">
       <CourseHeader />
