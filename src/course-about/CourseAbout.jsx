@@ -18,6 +18,7 @@ const getLmsBaseUrl = () => getConfig().LMS_BASE_URL;
 const getLearningBaseUrl = () => getConfig().LEARNING_BASE_URL;
 const getLoginUrl = () => getConfig().LOGIN_URL;
 const getStudioBaseUrl = () => getConfig().STUDIO_BASE_URL;
+const getCourseData = () => getConfig().GYM_COURSES;
 
 const CourseAbout = ({ GymSettings, timestamp }) => {
   const params = useParams();
@@ -218,7 +219,7 @@ const CourseAbout = ({ GymSettings, timestamp }) => {
   const CUSTOM_OVERVIEW = true;
 
   const gymCourseId = data?.org + '-' + data?.number;
-  const GymCourseData = GymSettings?.courses[gymCourseId];
+  const GymCourseData = getCourseData()[gymCourseId];
 
   const courseStartDate = GymCourseData?.date ? prettyDate(GymCourseData?.date) : prettyDate(data?.start);
 
@@ -231,9 +232,9 @@ const CourseAbout = ({ GymSettings, timestamp }) => {
   const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? 'Course About') : data?.name;
   const metaTitle = `${courseTitle} | ${getSiteName()}`;
   const shortDesc = CUSTOM_OVERVIEW ? (GymCourseData?.description ?? GymSettings?.meta.description) : dompurify.sanitize(data?.short_description);
-  const metaImg = GymCourseData?.live ? `${GymSettings?.urls.root}/img/og/courses/gym-${data?.number}.png` : `${GymSettings?.urls?.root}/img/og/gym-brand.png`;
-  const metaUrl = getBaseUrl + window.location.pathname; 
-  const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? GymSettings?.urls?.root + GymCourseData?.img : null) : data?.media?.image?.large;
+  const metaImg = GymCourseData?.live ? `${getBaseUrl()}/img/og/courses/gym-${data?.number}.png` : `${getBaseUrl()}/img/og/gym-brand.png`;
+  const metaUrl = `${getBaseUrl()}${window.location.pathname}`; 
+  const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? `${getBaseUrl()}${GymCourseData?.img}` : null) : data?.media?.image?.large;
   const courseImgAlt = `Image for ${courseTitle}`;
 
   const CTA = () => {
