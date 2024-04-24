@@ -101,7 +101,7 @@ const CourseAbout = ({ timestamp }) => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      let redirection = `${getLearningBaseUrl()}/learning/course/${courseId}/home`
+      let redirection = `${getLearningBaseUrl()}${courseId}/home`
       window.location.href = `${getLoginUrl()}?next=${encodeURIComponent(redirection)}`;
       return;
     }
@@ -257,7 +257,7 @@ const CourseAbout = ({ timestamp }) => {
           )
         }
         {enrolled && (
-          <a className="btn" href={`${getLearningBaseUrl()}/learning/course/${courseId}/home`}>
+          <a className="btn" href={`${getLearningBaseUrl()}${courseId}/home`}>
             Go to Class
           </a>
         )}
