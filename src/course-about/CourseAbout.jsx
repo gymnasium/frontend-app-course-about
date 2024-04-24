@@ -19,8 +19,11 @@ const getLearningBaseUrl = () => getConfig().LEARNING_BASE_URL;
 const getLoginUrl = () => getConfig().LOGIN_URL;
 const getStudioBaseUrl = () => getConfig().STUDIO_BASE_URL;
 const getCourseData = () => getConfig().GYM_COURSES;
+const getBios = () => getConfig().GYM_BIOS;
+const getMsg = () => getConfig().GYM_MSG;
+const getMeta = () => getConfig().GYM_META;
 
-const CourseAbout = ({ GymSettings, timestamp }) => {
+const CourseAbout = ({ timestamp }) => {
   const params = useParams();
   const [data, setData] = useState(null);
   const [courseDetails, setCourseDetails] = useState(null);
@@ -231,7 +234,7 @@ const CourseAbout = ({ GymSettings, timestamp }) => {
   const courseType = data?.number < 100 ? 'Gym Short' : (data?.number >= 700 ? 'Workshop' : 'Full Course');
   const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? 'Course About') : data?.name;
   const metaTitle = `${courseTitle} | ${getSiteName()}`;
-  const shortDesc = CUSTOM_OVERVIEW ? (GymCourseData?.description ?? GymSettings?.meta.description) : dompurify.sanitize(data?.short_description);
+  const shortDesc = CUSTOM_OVERVIEW ? (GymCourseData?.description ?? getMeta()?.meta.description) : dompurify.sanitize(data?.short_description);
   const metaImg = GymCourseData?.live ? `${getBaseUrl()}/img/og/courses/gym-${data?.number}.png` : `${getBaseUrl()}/img/og/gym-brand.png`;
   const metaUrl = `${getBaseUrl()}${window.location.pathname}`; 
   const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? `${getBaseUrl()}${GymCourseData?.img}` : null) : data?.media?.image?.large;
@@ -301,10 +304,10 @@ const CourseAbout = ({ GymSettings, timestamp }) => {
   const GymOverview = forwardRef((props, ref) => {
 
     const instructorSlug = GymCourseData?.instructor ?? null;
-    const bio = GymSettings?.bios[instructorSlug] ?? null;
+    const bio = getBios()[instructorSlug] ?? null;
     const instructorBlurb = {__html: bio?.extended_description ? bio?.extended_description : bio?.description};
     const instructorImg = `${getBaseUrl()}${bio?.img}`;
-    const headings = GymSettings?.messages?.mfe?.course_about?.headings;
+    const headings = getMsg()?.mfe?.course_about?.headings;
     const intro = { __html: GymCourseData?.intro };
     const about = { __html: GymCourseData?.about };
     const outline = GymCourseData?.outline ??  null;
