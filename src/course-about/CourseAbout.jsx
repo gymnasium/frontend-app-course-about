@@ -234,7 +234,7 @@ const CourseAbout = ({ timestamp }) => {
   const courseType = data?.number < 100 ? 'Gym Short' : (data?.number >= 700 ? 'Workshop' : 'Full Course');
   const courseTitle = CUSTOM_OVERVIEW ? (GymCourseData?.title ?? 'Course About') : data?.name;
   const metaTitle = `${courseTitle} | ${getSiteName()}`;
-  const shortDesc = CUSTOM_OVERVIEW ? (GymCourseData?.description ?? getMeta()?.meta.description) : dompurify.sanitize(data?.short_description);
+  const shortDesc = CUSTOM_OVERVIEW ? (GymCourseData?.description ?? getMeta()?.description) : dompurify.sanitize(data?.short_description);
   const metaImg = GymCourseData?.live ? `${getBaseUrl()}/img/og/courses/gym-${data?.number}.png` : `${getBaseUrl()}/img/og/gym-brand.png`;
   const metaUrl = `${getBaseUrl()}${window.location.pathname}`; 
   const courseImg = CUSTOM_OVERVIEW ? (GymCourseData?.img ? `${getBaseUrl()}${GymCourseData?.img}` : null) : data?.media?.image?.large;
