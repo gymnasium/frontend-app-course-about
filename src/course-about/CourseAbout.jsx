@@ -17,11 +17,11 @@ const getBaseUrl = () => getConfig().MARKETING_SITE_BASE_URL;
 const getLmsBaseUrl = () => getConfig().LMS_BASE_URL;
 const getLearningBaseUrl = () => getConfig().LEARNING_BASE_URL;
 const getLoginUrl = () => getConfig().LOGIN_URL;
-const getStudioBaseUrl = () => getConfig().STUDIO_BASE_URL;
 const getCourseData = () => getConfig().GYM_COURSES;
 const getBios = () => getConfig().GYM_BIOS;
 const getMsg = () => getConfig().GYM_MSG;
 const getMeta = () => getConfig().GYM_META;
+const getFaviconUrl = () => getConfig().FAVICON_URL;
 
 const CourseAbout = ({ timestamp }) => {
   const params = useParams();
@@ -101,7 +101,7 @@ const CourseAbout = ({ timestamp }) => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      let redirection = `${getLearningBaseUrl()}${courseId}/home`
+      let redirection = `${getLearningBaseUrl()}/learning/course/${courseId}/home`
       window.location.href = `${getLoginUrl()}?next=${encodeURIComponent(redirection)}`;
       return;
     }
@@ -220,6 +220,7 @@ const CourseAbout = ({ timestamp }) => {
   // Flag to toggle between LMS data and data sourced from static site JSON
   // TODO: set this in .env files?
   const CUSTOM_OVERVIEW = true;
+  const getStyles = () => `${getBaseUrl()}/css/mfe-course-about.css?${timestamp}`;
 
   const gymCourseId = data?.org + '-' + data?.number;
   const GymCourseData = getCourseData()[gymCourseId];
@@ -257,7 +258,7 @@ const CourseAbout = ({ timestamp }) => {
           )
         }
         {enrolled && (
-          <a className="btn" href={`${getLearningBaseUrl()}${courseId}/home`}>
+          <a className="btn" href={`${getLearningBaseUrl()}/learning/course/${courseId}/home`}>
             Go to Class
           </a>
         )}
@@ -554,8 +555,10 @@ const CourseAbout = ({ timestamp }) => {
       <meta name="twitter:description" property="og:description" content={shortDesc} />
       <meta name="twitter:image" property="og:image" content={metaImg} />
       <meta name="twitter:url" property="og:url" content={metaUrl} />
-      <link rel="shortcut icon" href={`${getBaseUrl()}/favicon.svg`} type="image/x-icon" />
-      <link rel="stylesheet" href={`${getBaseUrl()}/css/mfe-course-about.css?${timestamp}`} />
+      <link rel="shortcut icon" href={ getFaviconUrl() } type="image/x-icon" />
+      <link rel="dns-prefetch" href={`${getBaseUrl()}`} />
+      <link rel="preload" fetchpriority="high" href={ getStyles() } as="style" />
+      <link rel="stylesheet" href={ getStyles() } />
     </Helmet>
     <article className="course-about grid-sidebar">
       <CourseHeader />
