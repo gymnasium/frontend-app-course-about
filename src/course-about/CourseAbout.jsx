@@ -8,7 +8,6 @@ import axios from "axios";
 import TabItemComponent from "./TabItem";
 
 import { ensureConfig, getConfig } from "@edx/frontend-platform";
-import { useParams } from "react-router";
 
 import { timestamp } from '@edx/gym-frontend';
 
@@ -27,7 +26,6 @@ const getFaviconUrl = () => getConfig().FAVICON_URL;
 const getStyles = () => `${getBaseUrl()}/css/mfe-course-about.css?${timestamp}`;
 
 const CourseAbout = ({}) => {
-  const params = useParams();
   const [data, setData] = useState(null);
   const [courseDetails, setCourseDetails] = useState(null);
   const [tabActive, setTabActive] = useState(1);

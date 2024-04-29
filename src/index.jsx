@@ -1,46 +1,43 @@
+import React from "react";
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 import {
   APP_INIT_ERROR,
   APP_READY,
-  ensureConfig,
-  getConfig,
   initialize,
   subscribe,
 } from '@edx/frontend-platform';
 
-ensureConfig(['MARKETING_SITE_BASE_URL']);
-
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
 import {
-  Route,
-  Routes
+  BrowserRouter,
+  Routes,
+  Route
 } from "react-router-dom";
 
 import appMessages from './i18n';
 
 import { GymFooter, GymHeader } from '@edx/gym-frontend';
 
-import CourseAbout from './course-about/CourseAbout';
+import App from './App';
 
 import './index.scss';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <AppProvider>
+    <BrowserRouter basename="/courses">
       <GymHeader secondaryNav="courses" />
       <main>
         <div className="container">
-          {/* TODO: better routes */}
           <Routes>
-            <Route path="*" element={<CourseAbout />} />
+            <Route path="*" element={<App />} />
           </Routes>
         </div>
       </main>
       <GymFooter />
-    </AppProvider>,
+    </BrowserRouter>,
     document.getElementById('root'),
   );
 });
