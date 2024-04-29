@@ -10,12 +10,12 @@ import TabItemComponent from "./TabItem";
 import { ensureConfig, getConfig } from "@edx/frontend-platform";
 import { useParams } from "react-router";
 
-ensureConfig(['LEARNING_BASE_URL','LMS_BASE_URL','MARKETING_SITE_BASE_URL','STUDIO_BASE_URL']);
+ensureConfig(['LEARNING_MICROFRONTEND_URL','LMS_BASE_URL','MARKETING_SITE_BASE_URL','STUDIO_BASE_URL']);
 
 const getSiteName = () => getConfig().SITE_NAME;
 const getBaseUrl = () => getConfig().MARKETING_SITE_BASE_URL;
 const getLmsBaseUrl = () => getConfig().LMS_BASE_URL;
-const getLearningBaseUrl = () => getConfig().LEARNING_BASE_URL;
+const getLearningUrl = () => getConfig().LEARNING_MICROFRONTEND_URL;
 const getLoginUrl = () => getConfig().LOGIN_URL;
 const getCourseData = () => getConfig().GYM_COURSES;
 const getBios = () => getConfig().GYM_BIOS;
@@ -101,8 +101,8 @@ const CourseAbout = ({ timestamp }) => {
 
     if (!authenticatedUser) {
       // If not authenticated, redirect to login
-      let redirection = `${getLearningBaseUrl()}/learning/course/${courseId}/home`
-      window.location.href = `${getLoginUrl()}?next=${encodeURIComponent(redirection)}`;
+      let courseHomeRedirect = `${getLearningUrl()}/course/${courseId}/home`
+      window.location.href = `${getLoginUrl()}?next=${encodeURIComponent(courseHomeRedirect)}`;
       return;
     }
 
@@ -258,7 +258,7 @@ const CourseAbout = ({ timestamp }) => {
           )
         }
         {enrolled && (
-          <a className="btn" href={`${getLearningBaseUrl()}/learning/course/${courseId}/home`}>
+          <a className="btn" href={`${getLearningUrl()}/course/${courseId}/home`}>
             Go to Class
           </a>
         )}
