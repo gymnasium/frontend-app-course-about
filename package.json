@@ -1,6 +1,6 @@
 {
   "name": "@edx/frontend-app-course-about",
-  "version": "1.0.8-gym.quince.3",
+  "version": "1.0.9-gym.quince.3",
   "description": "Gymnasium-specific MFE to handle course about",
   "repository": {
     "type": "git",
@@ -26,29 +26,24 @@
     "url": "https://github.com/gymnasium/frontend-app-course-about/issues"
   },
   "dependencies": {
-    "@edx/frontend-platform": "4.6.0",
+    "@edx/frontend-platform": "8.0.1",
     "@edx/gym-frontend": "git+https://git@github.com/gymnasium/gym-frontend-components.git#main",
-    "@edx/paragon": "20.46.3",
-    "@fortawesome/fontawesome-svg-core": "6.4.0",
-    "@fortawesome/free-brands-svg-icons": "6.4.0",
-    "@fortawesome/free-regular-svg-icons": "6.4.0",
-    "@fortawesome/free-solid-svg-icons": "6.4.0",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "core-js": "3.30.0",
+    "@edx/paragon": "npm:@openedx/paragon@^21.5.6",
+    "core-js": "3.33.0",
     "dompurify": "^3.1.0",
     "prop-types": "15.8.1",
-    "react": "16.14.0",
-    "react-dom": "16.14.0",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
     "react-helmet": "6.1.0",
-    "react-redux": "7.2.9",
-    "react-router": "5.3.4",
-    "react-router-dom": "5.3.4",
-    "redux": "4.2.1",
+    "react-redux": "^8.1.1",
+    "react-router": "6.23.0",
+    "react-router-dom": "6.23.0",
+    "redux": "^4.0.4",
     "regenerator-runtime": "0.14.0"
   },
   "devDependencies": {
     "@edx/browserslist-config": "1.2.0",
-    "@edx/frontend-build": "13.0.1",
+    "@edx/frontend-build": "npm:@openedx/frontend-build@^14.0.3",
     "glob": "8.1.0",
     "husky": "8.0.3",
     "reactifex": "1.1.1"

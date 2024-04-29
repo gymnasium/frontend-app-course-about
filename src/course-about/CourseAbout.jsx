@@ -10,6 +10,8 @@ import TabItemComponent from "./TabItem";
 import { ensureConfig, getConfig } from "@edx/frontend-platform";
 import { useParams } from "react-router";
 
+import { timestamp } from '@edx/gym-frontend';
+
 ensureConfig(['LEARNING_MICROFRONTEND_URL','LMS_BASE_URL','MARKETING_SITE_BASE_URL','STUDIO_BASE_URL']);
 
 const getSiteName = () => getConfig().SITE_NAME;
@@ -22,8 +24,9 @@ const getBios = () => getConfig().GYM_BIOS;
 const getMsg = () => getConfig().GYM_MSG;
 const getMeta = () => getConfig().GYM_META;
 const getFaviconUrl = () => getConfig().FAVICON_URL;
+const getStyles = () => `${getBaseUrl()}/css/mfe-course-about.css?${timestamp}`;
 
-const CourseAbout = ({ timestamp }) => {
+const CourseAbout = ({}) => {
   const params = useParams();
   const [data, setData] = useState(null);
   const [courseDetails, setCourseDetails] = useState(null);
@@ -220,7 +223,6 @@ const CourseAbout = ({ timestamp }) => {
   // Flag to toggle between LMS data and data sourced from static site JSON
   // TODO: set this in .env files?
   const CUSTOM_OVERVIEW = true;
-  const getStyles = () => `${getBaseUrl()}/css/mfe-course-about.css?${timestamp}`;
 
   const gymCourseId = data?.org + '-' + data?.number;
   const GymCourseData = getCourseData()[gymCourseId];

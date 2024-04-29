@@ -15,17 +15,13 @@ ensureConfig(['MARKETING_SITE_BASE_URL']);
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
 import {
-  BrowserRouter as Router,
-  Switch,
-  Redirect,
   Route,
-  useParams
+  Routes
 } from "react-router-dom";
-import { Helmet } from 'react-helmet';
 
 import appMessages from './i18n';
 
-import { GymFooter, GymHeader, timestamp } from '@edx/gym-frontend';
+import { GymFooter, GymHeader } from '@edx/gym-frontend';
 
 import CourseAbout from './course-about/CourseAbout';
 
@@ -37,8 +33,10 @@ subscribe(APP_READY, () => {
       <GymHeader secondaryNav="courses" />
       <main>
         <div className="container">
-          {/* TODO: add routes */}
-          <CourseAbout timestamp={timestamp} />
+          {/* TODO: better routes */}
+          <Routes>
+            <Route path="*" element={<CourseAbout />} />
+          </Routes>
         </div>
       </main>
       <GymFooter />
