@@ -27,17 +27,19 @@ import './index.scss';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <BrowserRouter basename="/courses">
-      <GymHeader secondaryNav="courses" />
-      <main>
-        <div className="container">
-          <Routes>
-            <Route path="*" element={<App />} />
-          </Routes>
-        </div>
-      </main>
-      <GymFooter />
-    </BrowserRouter>,
+    <AppProvider wrapWithRouter={false}>
+      <BrowserRouter basename="/courses">
+        <GymHeader secondaryNav="courses" />
+        <main>
+          <div className="container">
+            <Routes>
+              <Route path="*" element={<App />} />
+            </Routes>
+          </div>
+        </main>
+        <GymFooter />
+      </BrowserRouter>
+    </AppProvider>,
     document.getElementById('root'),
   );
 });
