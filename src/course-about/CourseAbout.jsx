@@ -272,7 +272,7 @@ const CourseAbout = ({}) => {
     };
 
     return (
-      <header className="course-header grid-col-1-2 layout-1fr-2fr bg-mono-300 full-bleed">
+      <header className="course-header grid-col-1-2 layout-1fr-2fr bg-mono-400 full-bleed">
         {courseImg && (
           <figure style={figureStyle}>
             <img src={courseImg} alt={courseImgAlt} />
