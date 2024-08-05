@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@edx/frontend-platform": "^8.0.0",
-    "@edx/gym-frontend": "git+https://git@github.com/gymnasium/gym-frontend-components.git#main",
+    "@openedx/gym-frontend": "git+https://git@github.com/gymnasium/gym-frontend-components.git#main",
     "@openedx/paragon": "^22.0.0",
     "core-js": "3.37.1",
     "dompurify": "^3.1.0",
