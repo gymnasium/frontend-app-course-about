@@ -9,7 +9,6 @@ import TabItemComponent from "./TabItem";
 
 import { ensureConfig, getConfig } from "@edx/frontend-platform";
 
-import { timestamp } from '@edx/gym-frontend';
 
 ensureConfig(['LEARNING_MICROFRONTEND_URL','LMS_BASE_URL','MARKETING_SITE_BASE_URL','STUDIO_BASE_URL']);
 
@@ -23,7 +22,6 @@ const getBios = () => getConfig().GYM_BIOS;
 const getMsg = () => getConfig().GYM_MSG;
 const getMeta = () => getConfig().GYM_META;
 const getFaviconUrl = () => getConfig().FAVICON_URL;
-const getStyles = () => `${getBaseUrl()}/css/mfe-course-about.css?${timestamp}`;
 
 const CourseAbout = ({}) => {
   const [data, setData] = useState(null);

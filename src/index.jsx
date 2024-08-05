@@ -19,7 +19,7 @@ import {
 
 import appMessages from './i18n';
 
-import { GymFooter, GymHeader } from '@edx/gym-frontend';
+import { GymFooter, GymHeader } from '@openedx/gym-frontend';
 
 import App from './App';
 
