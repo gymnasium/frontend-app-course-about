@@ -28,7 +28,6 @@
   "dependencies": {
     "@edx/frontend-platform": "^8.0.0",
     "@openedx/gym-frontend": "git+https://git@github.com/gymnasium/gym-frontend-components.git#main",
-    "@openedx/paragon": "^22.0.0",
     "core-js": "3.37.1",
     "dompurify": "^3.1.0",
     "prop-types": "15.8.1",
@@ -45,7 +44,6 @@
     "@edx/browserslist-config": "1.2.0",
     "@openedx/frontend-build": "14.0.14",
     "glob": "8.1.0",
-    "husky": "8.0.3",
     "@edx/reactifex": "^2.1.1"
   },
   "overrides": {
