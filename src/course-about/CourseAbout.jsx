@@ -553,10 +553,6 @@ const CourseAbout = ({}) => {
       <meta name="twitter:description" property="og:description" content={shortDesc} />
       <meta name="twitter:image" property="og:image" content={metaImg} />
       <meta name="twitter:url" property="og:url" content={metaUrl} />
-      <link rel="shortcut icon" href={ getFaviconUrl() } type="image/x-icon" />
-      <link rel="dns-prefetch" href={`${getBaseUrl()}`} />
-      <link rel="preload" fetchpriority="high" href={ getStyles() } as="style" />
-      <link rel="stylesheet" href={ getStyles() } />
     </Helmet>
     <article className="course-about grid-sidebar">
       <CourseHeader />

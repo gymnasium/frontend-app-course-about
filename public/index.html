@@ -7,6 +7,10 @@
     <link rel="shortcut icon" href="<%= process.env.FAVICON_URL %>" type="image/x-icon" />
     <link rel="stylesheet" href="<%= process.env.MARKETING_SITE_BASE_URL %>/css/mfe-course-about.css" />
 
+    <link rel="dns-prefetch" href="<%= process.env.MARKETING_SITE_BASE_URL %>" />
+    <link rel="preload" fetchpriority="high" href="<%= process.env.MARKETING_SITE_BASE_URL %>/css/mfe-course-about.css" as="style" />
+    <link rel="stylesheet" href="<%= process.env.MARKETING_SITE_BASE_URL %>/css/mfe-course-about.css" />
+
     <meta name="author" content="Aquent Gymnasium"/>
     <meta property="og:type" content="website"/>
     <meta property="og:locale" content="en_US"/>
