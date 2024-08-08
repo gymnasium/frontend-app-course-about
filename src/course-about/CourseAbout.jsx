@@ -270,30 +270,31 @@ const CourseAbout = ({}) => {
     };
 
     return (
-      <header className="course-header grid-col-1-2 layout-1fr-2fr bg-mono-400 full-bleed">
-        {courseImg && (
-          <figure style={figureStyle}>
-            <img src={courseImg} alt={courseImgAlt} />
-          </figure>
-        )}
-        <div className="course-metabar">
-          {courseTitle && (
-            <div className="course-title">
-              <h1>{courseTitle}</h1>
-            </div>
+      <header className="course-header bg-mono-400">
+        <div className="container grid-col-1-2">
+          {courseImg && (
+            <figure style={figureStyle}>
+              <img src={courseImg} alt={courseImgAlt} />
+            </figure>
           )}
+          <div className="course-metabar">
+            {courseTitle && (
+              <div className="course-title">
+                <h1>{courseTitle}</h1>
+              </div>
+            )}
 
-          <div className="course-type">
-            <p>{courseType}</p>
+            <div className="course-type">
+              <p>{courseType}</p>
+            </div>
+
+            {courseRetired && (
+              <div className="course-messaging">
+                <p dangerouslySetInnerHTML={retiredMessage}></p>
+              </div>
+            )}
+            <CTA />
           </div>
-
-          {courseRetired && (
-            <div className="course-messaging">
-              <p dangerouslySetInnerHTML={retiredMessage}></p>
-            </div>
-          )}
-
-          <CTA />
         </div>
       </header>
     )
@@ -360,7 +361,7 @@ const CourseAbout = ({}) => {
     }
 
     return (
-    <>
+    <div className="container grid-sidebar">
       <div className="content">
         {intro && (
           <section className="course-intro">
@@ -422,7 +423,7 @@ const CourseAbout = ({}) => {
         )}
       </aside>
 
-    </>
+    </div>
     )
   });
 
@@ -554,7 +555,7 @@ const CourseAbout = ({}) => {
       <meta name="twitter:image" property="og:image" content={metaImg} />
       <meta name="twitter:url" property="og:url" content={metaUrl} />
     </Helmet>
-    <article className="course-about grid-sidebar">
+    <article className="course-about">
       <CourseHeader />
 
       <Overview ref={overviewRef} />

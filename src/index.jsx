@@ -31,11 +31,9 @@ subscribe(APP_READY, () => {
       <BrowserRouter basename="/courses">
         <GymHeader secondaryNav="courses" />
         <main>
-          <div className="container">
-            <Routes>
-              <Route path="*" element={<App />} />
-            </Routes>
-          </div>
+          <Routes>
+            <Route path="*" element={<App />} />
+          </Routes>
         </main>
         <GymFooter />
       </BrowserRouter>
