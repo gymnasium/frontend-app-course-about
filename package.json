@@ -26,7 +26,7 @@
     "url": "https://github.com/gymnasium/frontend-app-course-about/issues"
   },
   "dependencies": {
-    "@edx/frontend-platform": "^8.0.0",
+    "@edx/frontend-platform": "^8.1.1",
     "@openedx/gym-frontend": "git+https://git@github.com/gymnasium/gym-frontend-components.git#main",
     "core-js": "3.37.1",
     "dompurify": "^3.1.0",
@@ -43,6 +43,7 @@
   "devDependencies": {
     "@edx/browserslist-config": "1.2.0",
     "@openedx/frontend-build": "14.0.14",
+    "@openedx/paragon": "^22.7.0",
     "glob": "8.1.0",
     "@edx/reactifex": "^2.1.1"
   },
